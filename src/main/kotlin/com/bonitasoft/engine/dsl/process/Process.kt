@@ -1,7 +1,11 @@
 package com.bonitasoft.engine.dsl.process
 
+import org.bonitasoft.engine.bpm.bar.BusinessArchive
+import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
+import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
+import java.io.File
 
 open class Process(private val name: String,
                    private val version: String,
@@ -36,5 +40,12 @@ open class Process(private val name: String,
             builder.addTransition(it.first, it.second)
         }
         return builder.done()
+    }
+
+
+    fun export(file: File){
+        val processDefinition = export()
+        val businessArchive = BusinessArchiveBuilder().createNewBusinessArchive().setProcessDefinition(processDefinition).done()
+        BusinessArchiveFactory.writeBusinessArchiveToFile(businessArchive, file)
     }
 }
