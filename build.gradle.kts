@@ -16,12 +16,25 @@ repositories {
 }
 
 dependencies {
+    api("org.bonitasoft.engine:bonita-client:7.8.0")
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.0-rc.1") {
+        exclude("org.jetbrains.kotlin")
+    }
+    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.0-rc.1") {
+        exclude("org.junit.platform")
+        exclude("org.jetbrains.kotlin")
+    }
 
-    // Use the Kotlin JUnit integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+    // spek requires kotlin-reflect, can be omitted if already in the classpath
+    testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect")
+    testCompile("com.winterbe:expekt:0.5.0")
+}
+
+val test by tasks.getting(Test::class) {
+    useJUnitPlatform {
+        includeEngines("spek2")
+    }
 }
