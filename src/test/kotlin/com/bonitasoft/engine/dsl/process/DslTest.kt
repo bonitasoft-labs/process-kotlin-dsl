@@ -13,12 +13,9 @@ object DslTest : Spek({
     describe("A process DSL containing tasks") {
 
         val process = process("MyProcess", "1.0") {
-            automaticTask("Step1") {
-            }
-            automaticTask("Step2") {
-            }
-            automaticTask("Step3") {
-            }
+            automaticTask("Step1")
+            automaticTask("Step2")
+            automaticTask("Step3")
             transitions{
                 from("Step1").to("Step2")
                 from("Step2").to("Step3")
@@ -50,11 +47,10 @@ object DslTest : Spek({
     describe("A process DSL with parallel gateway") {
 
         val process = process("MyProcess", "1.0") {
-            parallelGateway("gate1") {
-            }
-            automaticTask("Step1") {}
-            automaticTask("Step2") {}
-            automaticTask("Step3") {}
+            parallelGateway("gate1")
+            automaticTask("Step1")
+            automaticTask("Step2")
+            automaticTask("Step3")
 
             transitions {
                 from("gate1"){

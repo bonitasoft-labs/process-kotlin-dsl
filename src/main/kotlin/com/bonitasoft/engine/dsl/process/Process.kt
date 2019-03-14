@@ -12,9 +12,9 @@ open class Process(private val name: String,
                    private val transitionContainer: TransitionContainer = TransitionContainer()) {
 
     fun automaticTask(name: String, init: FlowNode.() -> Unit = {}) = flowNode(AutomaticTask(name), init)
-    fun parallelGateway(name: String, init: FlowNode.() -> Unit) = flowNode(ParallelGateway(name), init)
-    fun inclusiveGateway(name: String, init: FlowNode.() -> Unit) = flowNode(InclusiveGateway(name), init)
-    fun exclusiveGateway(name: String, init: FlowNode.() -> Unit) = flowNode(ExclusiveGateway(name), init)
+    fun parallelGateway(name: String, init: FlowNode.() -> Unit= {}) = flowNode(ParallelGateway(name), init)
+    fun inclusiveGateway(name: String, init: FlowNode.() -> Unit = {}) = flowNode(InclusiveGateway(name), init)
+    fun exclusiveGateway(name: String, init: FlowNode.() -> Unit = {}) = flowNode(ExclusiveGateway(name), init)
     fun transitions(init: TransitionContainer.() -> Unit) {
         transitionContainer.init()
     }
