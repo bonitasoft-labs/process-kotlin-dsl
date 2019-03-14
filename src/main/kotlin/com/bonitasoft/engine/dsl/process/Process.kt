@@ -1,6 +1,5 @@
 package com.bonitasoft.engine.dsl.process
 
-import org.bonitasoft.engine.bpm.bar.BusinessArchive
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
@@ -9,13 +8,16 @@ import java.io.File
 
 open class Process(private val name: String,
                    private val version: String,
-                   private val flowNodes: MutableList<FlowNode> = ArrayList()) {
+                   private val flowNodes: MutableList<FlowNode> = ArrayList(),
+                   private val transitionContainer: TransitionContainer = TransitionContainer()) {
 
     fun automaticTask(name: String, init: FlowNode.() -> Unit) = flowNode(AutomaticTask(name), init)
     fun parallelGateway(name: String, init: FlowNode.() -> Unit) = flowNode(ParallelGateway(name), init)
     fun inclusiveGateway(name: String, init: FlowNode.() -> Unit) = flowNode(InclusiveGateway(name), init)
     fun exclusiveGateway(name: String, init: FlowNode.() -> Unit) = flowNode(ExclusiveGateway(name), init)
-
+    fun transitions(init: TransitionContainer.() -> Unit) {
+        transitionContainer.init()
+    }
 
     fun <T : FlowNode> flowNode(task: T, init: T.() -> Unit): T {
         task.init()
@@ -29,19 +31,12 @@ open class Process(private val name: String,
         flowNodes.forEach { task ->
             task.build(builder)
         }
-        val transitions = HashSet<Pair<String, String>>()
 
-        flowNodes.forEach { task ->
-            task.outgoingTransitions.forEach { transition ->
-                transitions.add(Pair(task.name, transition.target))
-            }
-        }
-        transitions.forEach {
-            builder.addTransition(it.first, it.second)
+        transitionContainer.transitionsList.forEach {
+            builder.addTransition(it.source, it.target)
         }
         return builder.done()
     }
-
 
     fun export(file: File){
         val processDefinition = export()
