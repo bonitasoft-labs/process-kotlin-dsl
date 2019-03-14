@@ -11,7 +11,7 @@ open class Process(private val name: String,
                    private val flowNodes: MutableList<FlowNode> = ArrayList(),
                    private val transitionContainer: TransitionContainer = TransitionContainer()) {
 
-    fun automaticTask(name: String, init: FlowNode.() -> Unit) = flowNode(AutomaticTask(name), init)
+    fun automaticTask(name: String, init: FlowNode.() -> Unit = {}) = flowNode(AutomaticTask(name), init)
     fun parallelGateway(name: String, init: FlowNode.() -> Unit) = flowNode(ParallelGateway(name), init)
     fun inclusiveGateway(name: String, init: FlowNode.() -> Unit) = flowNode(InclusiveGateway(name), init)
     fun exclusiveGateway(name: String, init: FlowNode.() -> Unit) = flowNode(ExclusiveGateway(name), init)
@@ -24,8 +24,6 @@ open class Process(private val name: String,
         flowNodes.add(task)
         return task
     }
-
-
     fun export(): DesignProcessDefinition {
         val builder = ProcessDefinitionBuilder().createNewInstance(name, version)
         flowNodes.forEach { task ->
@@ -37,6 +35,7 @@ open class Process(private val name: String,
         }
         return builder.done()
     }
+
 
     fun export(file: File){
         val processDefinition = export()

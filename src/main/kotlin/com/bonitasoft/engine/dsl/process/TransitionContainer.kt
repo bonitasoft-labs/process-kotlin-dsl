@@ -1,5 +1,8 @@
 package com.bonitasoft.engine.dsl.process
 
+/**
+ * @author Danila Mazour
+ */
 data class TransitionContainer(val transitionsList: MutableList<Transition> = ArrayList()) {
 
     fun from(sourceFlowNode: String) : TransitionBuilder{

@@ -70,28 +70,25 @@ object DslTest : Spek({
             processDefinition.flowElementContainer.getFlowNode("gate1").outgoingTransitions.should.have.size.equal(3)
         }
     }
-//    describe("A process DSL with exclusive gateway") {
-//
-//        val process = process("MyProcess", "1.0") {
-//            exclusiveGateway("gate1") {
-//                transition("Step1") {
-//                    default = true
-//                }
-//                transition("Step2") {
-//                    condition {
-//
-//                    }
-//                }
-//                transition("Step3")
-//            }
-//            automaticTask("Step1") {}
-//            automaticTask("Step2") {}
-//            automaticTask("Step3") {}
-//        }
-//        val processDefinition = process.export()
-//
-//        it("should have the parallel gateway with step1, step2 and step3") {
-//            processDefinition.flowElementContainer.getFlowNode("gate1").outgoingTransitions.should.have.size.equal(3)
-//        }
-//    }
+    describe("A process DSL with exclusive gateway") {
+
+        val process = process("MyProcess", "1.0") {
+            exclusiveGateway("gate1") {}
+            transitions {
+                from("gate1") {
+                    to("Step1").isDefault()
+                    to("Step2")
+                    to("Step3")
+                }
+            }
+            automaticTask("Step1") {}
+            automaticTask("Step2") {}
+            automaticTask("Step3") {}
+        }
+        val processDefinition = process.export()
+
+        it("should have the parallel gateway with step1, step2 and step3") {
+            processDefinition.flowElementContainer.getFlowNode("gate1").outgoingTransitions.should.have.size.equal(3)
+        }
+    }
 })
