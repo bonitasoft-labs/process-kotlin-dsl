@@ -20,15 +20,22 @@ object ConditionTest : Spek({
                 dependencies.should.be.empty
             }
         }
-        it ("should generate groovy script expression with dependencies"){
-            condition.groovy("return true"){
-                data("myData","java.lang.String")
-                data("myBiggestData","java.lang.Boolean")
+        it("should generate groovy script expression with dependencies") {
+            condition.groovy("return true") {
+                data("myData", "java.lang.String")
+                data("myBiggestData", "java.lang.Boolean")
             }
             condition.build().apply {
-               content.should.equal("return true")
-               dependencies.should.have.size(2)
-                dependencies.map { it.name }.should.equal(listOf("myData","myBiggestData"))
+                content.should.equal("return true")
+                dependencies.should.have.size(2)
+                dependencies.map { it.name }.should.equal(listOf("myData", "myBiggestData"))
+            }
+        }
+        it("should generate data dependency expression") {
+            condition.data("myData")
+            condition.build().apply {
+                content.should.equal("myData")
+                expressionType.should.equal("TYPE_VARIABLE")
             }
         }
     }

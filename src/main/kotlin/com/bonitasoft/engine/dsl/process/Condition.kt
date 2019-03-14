@@ -26,6 +26,10 @@ class Condition(var noCondition : Boolean = true, var expressionBuilder : Expres
         expressionBuilder.createGroovyScriptExpression(UUID.randomUUID().toString(),script,"java.lang.Boolean", dependenciesBuilder.build())
     }
 
+    fun data (data : String) {
+        noCondition = false
+        expressionBuilder.createDataExpression(data,"java.lang.Boolean")
+    }
     internal fun build(): Expression {
         return expressionBuilder.done()
     }
