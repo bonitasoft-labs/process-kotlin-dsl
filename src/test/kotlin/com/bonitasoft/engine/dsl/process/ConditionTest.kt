@@ -13,7 +13,7 @@ object ConditionTest : Spek({
         var condition = Condition()
         it("should have generated the correct expression from simple condition") {
             condition.groovy("return true")
-            condition.toExpression().apply {
+            condition.build().apply {
                 returnType.should.equal("java.lang.Boolean")
                 content.should.equal("return true")
                 interpreter.should.equal("GROOVY")
@@ -21,7 +21,15 @@ object ConditionTest : Spek({
             }
         }
         it ("should generate groovy script expression with dependencies"){
-
+            condition.groovy("return true"){
+                data("myData","java.lang.String")
+                data("myBiggestData","java.lang.Boolean")
+            }
+            condition.build().apply {
+               content.should.equal("return true")
+               dependencies.should.have.size(2)
+                dependencies.map { it.name }.should.equal(listOf("myData","myBiggestData"))
+            }
         }
     }
 

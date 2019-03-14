@@ -19,7 +19,14 @@ class Condition(var noCondition : Boolean = true, var expressionBuilder : Expres
         expressionBuilder.createGroovyScriptExpression(UUID.randomUUID().toString(),script,"java.lang.Boolean")
     }
 
-    internal fun toExpression(): Expression {
+    fun groovy(script : String, init : DependenciesBuilder.() -> Unit) {
+        noCondition = false
+        var dependenciesBuilder = DependenciesBuilder()
+        dependenciesBuilder.init()
+        expressionBuilder.createGroovyScriptExpression(UUID.randomUUID().toString(),script,"java.lang.Boolean", dependenciesBuilder.build())
+    }
+
+    internal fun build(): Expression {
         return expressionBuilder.done()
     }
 }
