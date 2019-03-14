@@ -4,6 +4,7 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
+import org.bonitasoft.engine.bpm.process.impl.TransitionDefinitionBuilder
 import java.io.File
 
 open class Process(private val name: String,
@@ -30,8 +31,17 @@ open class Process(private val name: String,
             task.build(builder)
         }
 
-        transitionContainer.transitionsList.forEach {
-            builder.addTransition(it.source, it.target)
+        transitionContainer.transitionsList.forEach{ transition ->
+            if(!transition.default) {
+                if (!transition.condition.noCondition) {
+
+                    builder.addTransition(transition.source, transition.target, transition.condition.expressionBuilder.done())
+                } else {
+                    builder.addTransition(transition.source, transition.target)
+                }
+            } else{
+                builder.addDefaultTransition(transition.source,transition.target)
+            }
         }
         return builder.done()
     }

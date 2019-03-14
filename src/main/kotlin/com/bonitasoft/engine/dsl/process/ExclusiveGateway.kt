@@ -5,6 +5,6 @@ import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 
 class ExclusiveGateway(name: String) : FlowNode(name) {
     override fun build(builder: ProcessDefinitionBuilder) {
-        builder.addGateway(name, GatewayType.PARALLEL)
+        builder.addGateway(name, GatewayType.EXCLUSIVE)
     }
 }
