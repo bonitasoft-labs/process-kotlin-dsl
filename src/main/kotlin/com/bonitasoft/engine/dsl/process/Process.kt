@@ -4,13 +4,12 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
-import org.bonitasoft.engine.bpm.process.impl.TransitionDefinitionBuilder
 import java.io.File
 
 open class Process(private val name: String,
                    private val version: String,
                    private val flowNodes: MutableList<FlowNode> = ArrayList(),
-                   private val transitionContainer: TransitionContainer = TransitionContainer()) {
+                   private val transitionContainer: TransitionContainer = TransitionContainer()) : DataContainer() {
 
     fun automaticTask(name: String, init: FlowNode.() -> Unit = {}) = flowNode(AutomaticTask(name), init)
     fun parallelGateway(name: String, init: FlowNode.() -> Unit= {}) = flowNode(ParallelGateway(name), init)
@@ -43,6 +42,11 @@ open class Process(private val name: String,
                 builder.addDefaultTransition(transition.source,transition.target)
             }
         }
+
+        dataList.forEach {
+            builder.addData(it.name, it.getDataType(), it.getInitialValue())
+        }
+
         return builder.done()
     }
 

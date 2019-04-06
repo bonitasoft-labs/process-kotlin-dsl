@@ -3,6 +3,9 @@
  */
 package com.bonitasoft.engine.dsl.process
 
+import com.bonitasoft.engine.dsl.process.DataType.Companion.boolean
+import com.bonitasoft.engine.dsl.process.DataType.Companion.custom
+import com.bonitasoft.engine.dsl.process.DataType.Companion.string
 import com.winterbe.expekt.should
 import org.bonitasoft.engine.bpm.flownode.AutomaticTaskDefinition
 import org.spekframework.spek2.Spek
@@ -95,5 +98,36 @@ object DslTest : Spek({
 
 
         }
+    }
+
+    describe("A process DSL with data") {
+        it("should add data on a process") {
+            val process = process("MyProcess", "1.0") {
+                data {
+                    name = "myObject"
+                    type = custom("com.bonitasoft.MyObject")
+                }
+                data {
+                    name = "myStringData"
+                    type = string()
+                    initialValue {
+                        groovy("return myObject.value", "java.lang.String") {
+                            dataRef("myObject", "com.bonitasoft.MyObject")
+                        }
+                    }
+                }
+                data {
+                    name = "boolData"
+                    type = boolean()
+                    initialValue {
+                        constant(true)
+                    }
+                }
+
+            }
+
+            process.export().flowElementContainer.dataDefinitions.should.have.size(3)
+        }
+
     }
 })

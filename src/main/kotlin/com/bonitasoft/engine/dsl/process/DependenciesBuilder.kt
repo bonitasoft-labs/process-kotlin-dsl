@@ -7,7 +7,7 @@ import org.bonitasoft.engine.expression.ExpressionBuilder
 class DependenciesBuilder(private var expressions : MutableList<Expression> = ArrayList() ) {
 
 
-    fun data (dependency : String, type : String){
+    fun dataRef (dependency : String, type : String){
         expressions.add(ExpressionBuilder().createDataExpression(dependency,type))
     }
 

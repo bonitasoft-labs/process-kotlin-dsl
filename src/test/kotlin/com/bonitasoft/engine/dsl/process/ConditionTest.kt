@@ -22,8 +22,8 @@ object ConditionTest : Spek({
         }
         it("should generate groovy script expression with dependencies") {
             condition.groovy("return true") {
-                data("myData", "java.lang.String")
-                data("myBiggestData", "java.lang.Boolean")
+                dataRef("myData", "java.lang.String")
+                dataRef("myBiggestData", "java.lang.Boolean")
             }
             condition.build().apply {
                 content.should.equal("return true")
@@ -32,7 +32,7 @@ object ConditionTest : Spek({
             }
         }
         it("should generate data dependency expression") {
-            condition.data("myData")
+            condition.dataRef("myData")
             condition.build().apply {
                 content.should.equal("myData")
                 expressionType.should.equal("TYPE_VARIABLE")
