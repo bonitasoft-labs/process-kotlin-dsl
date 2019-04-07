@@ -59,7 +59,7 @@ object ConnectorTest : Spek({
         val businessArchive = process.export()
         val processDefinition = businessArchive.processDefinition
 
-        BusinessArchiveFactory.writeBusinessArchiveToFile(businessArchive, File("/Users/baptiste/git/process-kotlin-dsl/test.bar"))
+//        BusinessArchiveFactory.writeBusinessArchiveToFile(businessArchive, File("/Users/baptiste/git/process-kotlin-dsl/test.bar"))
         it("should have the right name and version") {
             val task = processDefinition.flowElementContainer.getActivity("taskWithOps")
             task.connectors.should.have.size(1)

@@ -82,17 +82,18 @@ class ConnectorBuilder {
         map.forEach { name, content ->
             jarOutStream.putNextEntry(JarEntry(name))
             jarOutStream.write(content)
+            jarOutStream.closeEntry()
         }
         jarOutStream.flush()
         baos.flush()
+        jarOutStream.close()
         return baos.toByteArray()
     }
 
     fun buildConnectorImplementationFile(definitionId: String, definitionVersion: String, implementationId: String,
                                          implementationVersion: String, implementationClassname: String, dependencies: List<String>): ByteArray {
-        val jarDependencies = dependencies.map { "\n        <jarDependency>$it</jarDependency>" }
-        val content = """
-<?xml version="1.0" encoding="UTF-8"?>
+        val jarDependencies = dependencies.map { "\n        <jarDependency>$it</jarDependency>" }.joinToString("")
+        val content = """<?xml version="1.0" encoding="UTF-8"?>
 <implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
     <definitionId>$definitionId</definitionId>
     <definitionVersion>$definitionVersion</definitionVersion>
