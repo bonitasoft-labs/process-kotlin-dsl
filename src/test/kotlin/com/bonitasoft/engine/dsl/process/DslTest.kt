@@ -25,7 +25,7 @@ object DslTest : Spek({
             }
 
         }
-        val processDefinition = process.export()
+        val processDefinition = process.export().processDefinition
 
         it("should have the right name and version") {
             processDefinition.name.should.equal("MyProcess")
@@ -63,7 +63,7 @@ object DslTest : Spek({
                 }
             }
         }
-        val processDefinition = process.export()
+        val processDefinition = process.export().processDefinition
 
         it("should have the parallel gateway with step1, step2 and step3") {
             processDefinition.flowElementContainer.getFlowNode("gate1").outgoingTransitions.should.have.size.equal(3)
@@ -88,7 +88,7 @@ object DslTest : Spek({
             automaticTask("Step2")
             automaticTask("Step3")
         }
-        val processDefinition = process.export()
+        val processDefinition = process.export().processDefinition
 
         it("should have the parallel gateway with step1, step2 and step3") {
             processDefinition.flowElementContainer.getFlowNode("gate1").outgoingTransitions.should.have.size.equal(2)
@@ -139,8 +139,9 @@ object DslTest : Spek({
 
             }
 
-            process.export().flowElementContainer.dataDefinitions.should.have.size(3)
-            process.export().flowElementContainer.getActivity("myTask").dataDefinitions.should.have.size(1)
+            val processDefinition = process.export().processDefinition
+            processDefinition.flowElementContainer.dataDefinitions.should.have.size(3)
+            processDefinition.flowElementContainer.getActivity("myTask").dataDefinitions.should.have.size(1)
         }
 
     }

@@ -34,7 +34,7 @@ object OperationTest : Spek({
             }
 
         }
-        val processDefinition = process.export()
+        val processDefinition = process.export().processDefinition
 
         it("should have the right name and version") {
             val task = processDefinition.flowElementContainer.getActivity("taskWithOps")

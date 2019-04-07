@@ -15,7 +15,7 @@ object EventTest : Spek({
         val process = process("MyProcess", "1.0") {
             start("startEvent")
         }
-        val processDefinition = process.export()
+        val processDefinition = process.export().processDefinition
 
         it("should have the right name and version") {
             processDefinition.flowElementContainer.startEvents.should.have.size(1)
@@ -35,7 +35,7 @@ object EventTest : Spek({
                 "startEvent" to "task"
             }
         }
-        val processDefinition = process.export()
+        val processDefinition = process.export().processDefinition
 
         it("should have the right name and version") {
             processDefinition.flowElementContainer.startEvents.should.have.size(1)
@@ -59,7 +59,7 @@ object EventTest : Spek({
                 }
             }
         }
-        val processDefinition = process.export()
+        val processDefinition = process.export().processDefinition
 
         it("should have the right name and version") {
             processDefinition.flowElementContainer.intermediateCatchEvents.should.have.size(1)
@@ -91,7 +91,7 @@ object EventTest : Spek({
                 }
             }
         }
-        val processDefinition = process.export()
+        val processDefinition = process.export().processDefinition
 
         it("should have the right name and version") {
             processDefinition.flowElementContainer.intermediateThrowEvents.should.have.size(1)

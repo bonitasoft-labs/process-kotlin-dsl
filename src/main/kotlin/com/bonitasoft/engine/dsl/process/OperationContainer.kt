@@ -1,6 +1,6 @@
 package com.bonitasoft.engine.dsl.process
 
-class OperationContainer {
+open class OperationContainer {
 
     val operations : MutableList<OperationDSLBuilder> = mutableListOf()
 

@@ -13,6 +13,8 @@ open class ExpressionDSLBuilder {
         fun dataRef(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { dataRef(data) }
         fun groovy(script: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script) }
         fun groovy(script: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
+        fun input(name: String, type: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { input(name, type) }
+
 
     }
 
@@ -51,6 +53,18 @@ open class ExpressionDSLBuilder {
         type = ExpressionType.TYPE_CONSTANT
         returnType = "java.lang.String"
         content = condition
+    }
+
+    fun input(name: String) {
+        type = ExpressionType.TYPE_INPUT
+        returnType = "java.lang.String"
+        content = name
+    }
+
+    fun input(name: String, type: String) {
+        this.type = ExpressionType.TYPE_INPUT
+        returnType = type
+        content = name
     }
     fun groovy(script: String, type: String) {
         groovy(script)

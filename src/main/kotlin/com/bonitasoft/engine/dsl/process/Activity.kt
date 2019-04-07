@@ -1,5 +1,6 @@
 package com.bonitasoft.engine.dsl.process
 
+import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.process.impl.ActivityDefinitionBuilder
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 
@@ -11,8 +12,8 @@ abstract class Activity(parent: DataContainer, name: String) : FlowNode(parent, 
         operationContainer = OperationContainer().apply(init)
     }
 
-    override fun build(builder: ProcessDefinitionBuilder): ActivityDefinitionBuilder {
-        val buildFlowNode = super.build(builder)
+    override fun build(builder: ProcessDefinitionBuilder, businessArchiveBuilder: BusinessArchiveBuilder): ActivityDefinitionBuilder {
+        val buildFlowNode = super.build(builder, businessArchiveBuilder)
         val activityDefinitionBuilder = buildFlowNode as ActivityDefinitionBuilder
         buildOperation(activityDefinitionBuilder)
         return activityDefinitionBuilder

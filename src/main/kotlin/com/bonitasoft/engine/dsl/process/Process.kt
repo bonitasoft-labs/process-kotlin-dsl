@@ -1,10 +1,8 @@
 package com.bonitasoft.engine.dsl.process
 
+import org.bonitasoft.engine.bpm.bar.BusinessArchive
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
-import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory
-import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
-import java.io.File
 
 class Process(private val name: String,
                    private val version: String,
@@ -30,10 +28,15 @@ class Process(private val name: String,
         flowNodes.add(task)
         return task
     }
-    fun export(): DesignProcessDefinition {
+
+    fun export(): BusinessArchive {
+
+        val businessArchiveBuilder = BusinessArchiveBuilder().createNewBusinessArchive()
+
+
         val builder = ProcessDefinitionBuilder().createNewInstance(name, version)
         flowNodes.forEach { task ->
-            task.build(builder)
+            task.build(builder, businessArchiveBuilder)
         }
 
         transitionContainer.transitionsList.forEach{ transition ->
@@ -51,13 +54,8 @@ class Process(private val name: String,
             builder.addData(it.name, it.getDataType(), it.getInitialValue())
         }
 
-        return builder.done()
-    }
-
-
-    fun export(file: File){
-        val processDefinition = export()
-        val businessArchive = BusinessArchiveBuilder().createNewBusinessArchive().setProcessDefinition(processDefinition).done()
-        BusinessArchiveFactory.writeBusinessArchiveToFile(businessArchive, file)
+        builder.done()
+        businessArchiveBuilder.setProcessDefinition(builder.done())
+        return businessArchiveBuilder.done()
     }
 }
