@@ -5,7 +5,7 @@ import org.bonitasoft.engine.expression.ExpressionBuilder
 import org.bonitasoft.engine.expression.ExpressionType
 import java.util.*
 
-class ExpressionDSLBuilder(var expressionBuilder: ExpressionBuilder = ExpressionBuilder().createNewInstance(UUID.randomUUID().toString())) {
+class ExpressionDSLBuilder(val dataContainer: DataContainer, var expressionBuilder: ExpressionBuilder = ExpressionBuilder().createNewInstance(UUID.randomUUID().toString())) {
 
     fun constant(condition: Boolean) {
         setConstant(condition).setReturnType("java.lang.Boolean")
@@ -23,7 +23,7 @@ class ExpressionDSLBuilder(var expressionBuilder: ExpressionBuilder = Expression
     }
 
     fun groovy(script: String, type: String, init: DependenciesBuilder.() -> Unit) {
-        var dependenciesBuilder = DependenciesBuilder()
+        var dependenciesBuilder = DependenciesBuilder(dataContainer)
         dependenciesBuilder.init()
         expressionBuilder.createGroovyScriptExpression(UUID.randomUUID().toString(), script, type, dependenciesBuilder.build())
     }

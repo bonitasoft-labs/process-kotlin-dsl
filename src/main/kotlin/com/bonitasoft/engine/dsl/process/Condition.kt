@@ -2,35 +2,54 @@ package com.bonitasoft.engine.dsl.process
 
 import org.bonitasoft.engine.expression.Expression
 import org.bonitasoft.engine.expression.ExpressionBuilder
+import org.bonitasoft.engine.expression.ExpressionInterpreter
+import org.bonitasoft.engine.expression.ExpressionType
 import java.util.*
 
 /**
  * @author Danila Mazour
  */
-class Condition(var noCondition : Boolean = true, var expressionBuilder : ExpressionBuilder = ExpressionBuilder()) {
+class Condition(val dataContainer: DataContainer) {
+
+    private var type: ExpressionType? = null
+    private var interpreter: String? = null
+    private var content: String? = null
+    private var dependenciesBuilder: DependenciesBuilder? = null
+
 
     fun constant(condition: Boolean) {
-        noCondition = false
-        expressionBuilder.createConstantBooleanExpression(condition)
+        type = ExpressionType.TYPE_CONSTANT
+        content = condition.toString()
     }
 
     fun groovy(script : String){
-        noCondition = false
-        expressionBuilder.createGroovyScriptExpression(UUID.randomUUID().toString(),script,"java.lang.Boolean")
+        type = ExpressionType.TYPE_READ_ONLY_SCRIPT
+        interpreter = ExpressionInterpreter.GROOVY.name
+        content = script
     }
 
     fun groovy(script : String, init : DependenciesBuilder.() -> Unit) {
-        noCondition = false
-        var dependenciesBuilder = DependenciesBuilder()
-        dependenciesBuilder.init()
-        expressionBuilder.createGroovyScriptExpression(UUID.randomUUID().toString(),script,"java.lang.Boolean", dependenciesBuilder.build())
+        groovy(script)
+        dependenciesBuilder = DependenciesBuilder(dataContainer)
+        dependenciesBuilder?.init()
     }
 
     fun dataRef (data : String) {
-        noCondition = false
-        expressionBuilder.createDataExpression(data,"java.lang.Boolean")
+        type = ExpressionType.TYPE_VARIABLE
+        content = data
     }
     internal fun build(): Expression {
-        return expressionBuilder.done()
+
+        val builder = ExpressionBuilder().createNewInstance(UUID.randomUUID().toString())
+                .setReturnType(java.lang.Boolean::class.java.name)
+                .setContent(content)
+                .setExpressionType(type)
+                .setInterpreter(interpreter)
+        dependenciesBuilder?.build().apply { builder.setDependencies(this) }
+        return builder.done()
+    }
+
+    fun hasCondition() : Boolean {
+        return content != null
     }
 }

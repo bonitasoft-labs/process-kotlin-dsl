@@ -2,10 +2,10 @@ package com.bonitasoft.engine.dsl.process
 
 import org.bonitasoft.engine.expression.Expression
 
-data class Data(var name: String = "", var type: DataType = DataType.string(), private var initialExpression: ExpressionDSLBuilder? = null) {
+data class Data(val dataContainer: DataContainer, var name: String = "", var type: DataType = DataType.string(), private var initialExpression: ExpressionDSLBuilder? = null) {
 
     fun initialValue(init: ExpressionDSLBuilder.() -> Unit) {
-        initialExpression = ExpressionDSLBuilder().apply(init)
+        initialExpression = ExpressionDSLBuilder(dataContainer).apply(init)
     }
 
     internal fun getDataType() : String{

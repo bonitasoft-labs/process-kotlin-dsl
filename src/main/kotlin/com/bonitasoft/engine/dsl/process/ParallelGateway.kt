@@ -1,10 +1,11 @@
 package com.bonitasoft.engine.dsl.process
 
 import org.bonitasoft.engine.bpm.flownode.GatewayType
+import org.bonitasoft.engine.bpm.process.impl.FlowElementContainerBuilder
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 
-class ParallelGateway(name: String) : FlowNode(name) {
-    override fun build(builder: ProcessDefinitionBuilder) {
-        builder.addGateway(name, GatewayType.PARALLEL)
+class ParallelGateway(parent: DataContainer, name: String) : FlowNode(parent, name) {
+    override fun buildFlowNode(builder: ProcessDefinitionBuilder): FlowElementContainerBuilder {
+        return builder.addGateway(name, GatewayType.PARALLEL)
     }
 }

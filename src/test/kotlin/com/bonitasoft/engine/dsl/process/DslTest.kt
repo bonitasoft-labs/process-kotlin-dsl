@@ -123,10 +123,24 @@ object DslTest : Spek({
                         constant(true)
                     }
                 }
+                automaticTask("myTask") {
+                    data {
+                        name = "groovyData"
+                        type = string()
+                        initialValue {
+                            groovy("boolData + myStringData + myObject", "java.lan.String") {
+                                dataRef("boolData")
+                                dataRef("myStringData")
+                                dataRef("myObject")
+                            }
+                        }
+                    }
+                }
 
             }
 
             process.export().flowElementContainer.dataDefinitions.should.have.size(3)
+            process.export().flowElementContainer.getActivity("myTask").dataDefinitions.should.have.size(1)
         }
 
     }

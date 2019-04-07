@@ -6,15 +6,17 @@ import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import java.io.File
 
-open class Process(private val name: String,
+class Process(private val name: String,
                    private val version: String,
-                   private val flowNodes: MutableList<FlowNode> = ArrayList(),
-                   private val transitionContainer: TransitionContainer = TransitionContainer()) : DataContainer() {
+                   private val flowNodes: MutableList<FlowNode> = ArrayList()) : DataContainer() {
 
-    fun automaticTask(name: String, init: FlowNode.() -> Unit = {}) = flowNode(AutomaticTask(name), init)
-    fun parallelGateway(name: String, init: FlowNode.() -> Unit= {}) = flowNode(ParallelGateway(name), init)
-    fun inclusiveGateway(name: String, init: FlowNode.() -> Unit = {}) = flowNode(InclusiveGateway(name), init)
-    fun exclusiveGateway(name: String, init: FlowNode.() -> Unit = {}) = flowNode(ExclusiveGateway(name), init)
+    private val transitionContainer: TransitionContainer = TransitionContainer(this)
+
+
+    fun automaticTask(name: String, init: FlowNode.() -> Unit = {}) = flowNode(AutomaticTask(this, name), init)
+    fun parallelGateway(name: String, init: FlowNode.() -> Unit= {}) = flowNode(ParallelGateway(this, name), init)
+    fun inclusiveGateway(name: String, init: FlowNode.() -> Unit = {}) = flowNode(InclusiveGateway(this, name), init)
+    fun exclusiveGateway(name: String, init: FlowNode.() -> Unit = {}) = flowNode(ExclusiveGateway(this, name), init)
     fun transitions(init: TransitionContainer.() -> Unit) {
         transitionContainer.init()
     }
@@ -32,9 +34,8 @@ open class Process(private val name: String,
 
         transitionContainer.transitionsList.forEach{ transition ->
             if(!transition.default) {
-                if (!transition.condition.noCondition) {
-
-                    builder.addTransition(transition.source, transition.target, transition.condition.expressionBuilder.done())
+                if (transition.hasCondition()) {
+                    builder.addTransition(transition.source, transition.target, transition.condition.build())
                 } else {
                     builder.addTransition(transition.source, transition.target)
                 }
@@ -42,7 +43,6 @@ open class Process(private val name: String,
                 builder.addDefaultTransition(transition.source,transition.target)
             }
         }
-
         dataList.forEach {
             builder.addData(it.name, it.getDataType(), it.getInitialValue())
         }

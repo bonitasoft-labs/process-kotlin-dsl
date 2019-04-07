@@ -4,18 +4,16 @@ import org.bonitasoft.engine.expression.Expression
 import org.bonitasoft.engine.expression.ExpressionBuilder
 
 
-class DependenciesBuilder(private var expressions : MutableList<Expression> = ArrayList() ) {
+class DependenciesBuilder(private val dataContainer: DataContainer, private var expressions: MutableList<String> = ArrayList()) {
 
-
-    fun dataRef (dependency : String, type : String){
-        expressions.add(ExpressionBuilder().createDataExpression(dependency,type))
+    fun dataRef(dependency: String) {
+        expressions.add(dependency)
     }
 
-
-
-
-
     internal fun build(): List<Expression> {
-        return expressions
+        return expressions.map { name ->
+            val dep = dataContainer.resolveData(name) ?: throw IllegalArgumentException("Dependency named $name not found")
+            ExpressionBuilder().createDataExpression(name, dep.name)
+        }
     }
 }

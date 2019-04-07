@@ -3,7 +3,7 @@ package com.bonitasoft.engine.dsl.process
 /**
  * @author Danila Mazour
  */
-data class TransitionContainer(val transitionsList: MutableList<Transition> = ArrayList()) {
+data class TransitionContainer(val dataContainer: DataContainer, val transitionsList: MutableList<Transition> = ArrayList()) {
 
     fun from(sourceFlowNode: String, init: TransitionBuilder.() -> Unit = {}): TransitionBuilder{
         val transitionBuilder = TransitionBuilder(sourceFlowNode,this)
