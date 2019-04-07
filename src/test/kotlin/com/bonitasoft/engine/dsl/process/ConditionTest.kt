@@ -51,7 +51,10 @@ object ConditionTest : Spek({
             assertThrows<IllegalArgumentException> { condition.build() }
         }
         it("should generate data dependency expression") {
-            val condition = Condition(DataContainer())
+            val condition = Condition(DataContainer().data {
+                name = "myData"
+                type = DataType.string()
+            })
             condition.dataRef("myData")
             condition.build().apply {
                 content.should.equal("myData")

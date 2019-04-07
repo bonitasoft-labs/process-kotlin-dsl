@@ -12,8 +12,9 @@ open class DataContainer(val parent: DataContainer? = null, var dataList: Mutabl
         return this
     }
 
-    internal fun resolveData(name: String): Data? {
+    internal fun resolveData(name: String): Data {
         return dataList.find { it.name == name } ?: parent?.resolveData(name)
+        ?: throw IllegalArgumentException("Dependency named $name not found")
     }
 
     internal fun buildData(builder: FlowElementContainerBuilder) {

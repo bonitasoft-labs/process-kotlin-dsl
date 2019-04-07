@@ -41,7 +41,7 @@ class Process(private val name: String,
         transitionContainer.transitionsList.forEach{ transition ->
             if(!transition.default) {
                 if (transition.hasCondition()) {
-                    builder.addTransition(transition.source, transition.target, transition.condition.build())
+                    builder.addTransition(transition.source, transition.target, transition.condition?.build())
                 } else {
                     builder.addTransition(transition.source, transition.target)
                 }

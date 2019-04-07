@@ -12,7 +12,7 @@ class DependenciesBuilder(private val dataContainer: DataContainer, private var 
 
     internal fun build(): List<Expression> {
         return expressions.map { name ->
-            val dep = dataContainer.resolveData(name) ?: throw IllegalArgumentException("Dependency named $name not found")
+            val dep = dataContainer.resolveData(name)
             ExpressionBuilder().createDataExpression(name, dep.name)
         }
     }

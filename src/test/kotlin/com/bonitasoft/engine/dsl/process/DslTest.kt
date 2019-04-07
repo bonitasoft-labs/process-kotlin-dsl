@@ -112,7 +112,7 @@ object DslTest : Spek({
                     type = string()
                     initialValue {
                         groovy("return myObject.value", "java.lang.String") {
-                            dataRef("myObject", "com.bonitasoft.MyObject")
+                            dataRef("myObject")
                         }
                     }
                 }

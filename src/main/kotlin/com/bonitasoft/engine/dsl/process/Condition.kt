@@ -9,47 +9,12 @@ import java.util.*
 /**
  * @author Danila Mazour
  */
-class Condition(val dataContainer: DataContainer) {
-
-    private var type: ExpressionType? = null
-    private var interpreter: String? = null
-    private var content: String? = null
-    private var dependenciesBuilder: DependenciesBuilder? = null
+class Condition(dataContainer: DataContainer) : ExpressionDSLBuilder(dataContainer) {
 
 
-    fun constant(condition: Boolean) {
-        type = ExpressionType.TYPE_CONSTANT
-        content = condition.toString()
-    }
-
-    fun groovy(script : String){
-        type = ExpressionType.TYPE_READ_ONLY_SCRIPT
-        interpreter = ExpressionInterpreter.GROOVY.name
-        content = script
-    }
-
-    fun groovy(script : String, init : DependenciesBuilder.() -> Unit) {
-        groovy(script)
-        dependenciesBuilder = DependenciesBuilder(dataContainer)
-        dependenciesBuilder?.init()
-    }
-
-    fun dataRef (data : String) {
-        type = ExpressionType.TYPE_VARIABLE
-        content = data
-    }
-    internal fun build(): Expression {
-
-        val builder = ExpressionBuilder().createNewInstance(UUID.randomUUID().toString())
+    override fun build(): Expression {
+        val builder = super.initBuilder()
                 .setReturnType(java.lang.Boolean::class.java.name)
-                .setContent(content)
-                .setExpressionType(type)
-                .setInterpreter(interpreter)
-        dependenciesBuilder?.build().apply { builder.setDependencies(this) }
         return builder.done()
-    }
-
-    fun hasCondition() : Boolean {
-        return content != null
     }
 }
