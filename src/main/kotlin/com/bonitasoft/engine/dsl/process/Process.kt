@@ -4,6 +4,8 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
+import org.bonitasoft.engine.expression.Expression
+import org.bonitasoft.engine.expression.ExpressionBuilder
 import java.io.File
 
 class Process(private val name: String,
@@ -13,6 +15,10 @@ class Process(private val name: String,
     private val transitionContainer: TransitionContainer = TransitionContainer(this)
 
 
+    fun start(name: String, init: StartEvent.() -> Unit = {}) = flowNode(StartEvent(this, name), init)
+    fun startMessage(name: String, init: StartMessageEvent.() -> Unit = {}) = flowNode(StartMessageEvent(this, name), init)
+    fun catchMessage(name: String, init: CatchMessageEvent.() -> Unit = {}) = flowNode(CatchMessageEvent(this, name), init)
+    fun throwMessage(name: String, init: ThrowMessageEvent.() -> Unit = {}) = flowNode(ThrowMessageEvent(this, name), init)
     fun automaticTask(name: String, init: FlowNode.() -> Unit = {}) = flowNode(AutomaticTask(this, name), init)
     fun parallelGateway(name: String, init: FlowNode.() -> Unit= {}) = flowNode(ParallelGateway(this, name), init)
     fun inclusiveGateway(name: String, init: FlowNode.() -> Unit = {}) = flowNode(InclusiveGateway(this, name), init)

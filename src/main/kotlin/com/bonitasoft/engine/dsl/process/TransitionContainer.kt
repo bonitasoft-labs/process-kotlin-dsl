@@ -11,6 +11,14 @@ data class TransitionContainer(val dataContainer: DataContainer, val transitions
         return transitionBuilder
     }
 
+    infix fun String.to(that: String): Transition {
+        return from(this).to(that)
+    }
+
+    infix fun FlowNode.to(that: FlowNode): Transition {
+        return from(this.name).to(that.name)
+    }
+
     internal fun add( transition : Transition) {
        transitionsList.add(transition)
     }

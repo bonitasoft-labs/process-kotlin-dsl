@@ -17,11 +17,11 @@ object DslTest : Spek({
 
         val process = process("MyProcess", "1.0") {
             automaticTask("Step1")
-            automaticTask("Step2")
-            automaticTask("Step3")
+            val step2 = automaticTask("Step2")
+            val step3 = automaticTask("Step3")
             transitions{
-                from("Step1").to("Step2")
-                from("Step2").to("Step3")
+                "Step1" to "Step2"
+                step2 to step3
             }
 
         }
