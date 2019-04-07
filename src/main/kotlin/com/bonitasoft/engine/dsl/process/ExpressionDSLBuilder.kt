@@ -6,7 +6,16 @@ import org.bonitasoft.engine.expression.ExpressionInterpreter
 import org.bonitasoft.engine.expression.ExpressionType
 import java.util.*
 
-open class ExpressionDSLBuilder(val dataContainer: DataContainer) {
+open class ExpressionDSLBuilder {
+
+
+    object ExpressionDSLBuilderObject {
+        fun dataRef(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { dataRef(data) }
+        fun groovy(script: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script) }
+        fun groovy(script: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
+
+    }
+
 
     private var type: ExpressionType? = null
     private var interpreter: String? = null
@@ -23,7 +32,7 @@ open class ExpressionDSLBuilder(val dataContainer: DataContainer) {
 
     open fun groovy(script: String, init: DependenciesBuilder.() -> Unit) {
         groovy(script)
-        dependenciesBuilder = DependenciesBuilder(dataContainer)
+        dependenciesBuilder = DependenciesBuilder()
         dependenciesBuilder?.init()
     }
 
@@ -53,12 +62,12 @@ open class ExpressionDSLBuilder(val dataContainer: DataContainer) {
         returnType = type
     }
 
-    internal open fun build(): Expression {
-        val builder = initBuilder()
+    internal open fun build(dataContainer: DataContainer): Expression {
+        val builder = initBuilder(dataContainer)
         return builder.done()
     }
 
-    internal fun initBuilder(): ExpressionBuilder {
+    internal fun initBuilder(dataContainer: DataContainer): ExpressionBuilder {
         if (type == ExpressionType.TYPE_VARIABLE && content != null) {
             returnType = dataContainer.resolveData(content!!).type.type
         }
@@ -68,7 +77,7 @@ open class ExpressionDSLBuilder(val dataContainer: DataContainer) {
                 .setContent(content)
                 .setExpressionType(type)
                 .setInterpreter(interpreter)
-        dependenciesBuilder?.build().apply { builder.setDependencies(this) }
+        dependenciesBuilder?.build(dataContainer).apply { builder.setDependencies(this) }
         return builder
     }
 }

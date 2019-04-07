@@ -4,8 +4,6 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory
 import org.bonitasoft.engine.bpm.process.DesignProcessDefinition
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
-import org.bonitasoft.engine.expression.Expression
-import org.bonitasoft.engine.expression.ExpressionBuilder
 import java.io.File
 
 class Process(private val name: String,
@@ -19,10 +17,10 @@ class Process(private val name: String,
     fun startMessage(name: String, init: StartMessageEvent.() -> Unit = {}) = flowNode(StartMessageEvent(this, name), init)
     fun catchMessage(name: String, init: CatchMessageEvent.() -> Unit = {}) = flowNode(CatchMessageEvent(this, name), init)
     fun throwMessage(name: String, init: ThrowMessageEvent.() -> Unit = {}) = flowNode(ThrowMessageEvent(this, name), init)
-    fun automaticTask(name: String, init: FlowNode.() -> Unit = {}) = flowNode(AutomaticTask(this, name), init)
-    fun parallelGateway(name: String, init: FlowNode.() -> Unit= {}) = flowNode(ParallelGateway(this, name), init)
-    fun inclusiveGateway(name: String, init: FlowNode.() -> Unit = {}) = flowNode(InclusiveGateway(this, name), init)
-    fun exclusiveGateway(name: String, init: FlowNode.() -> Unit = {}) = flowNode(ExclusiveGateway(this, name), init)
+    fun automaticTask(name: String, init: AutomaticTask.() -> Unit = {}) = flowNode(AutomaticTask(this, name), init)
+    fun parallelGateway(name: String, init: ParallelGateway.() -> Unit= {}) = flowNode(ParallelGateway(this, name), init)
+    fun inclusiveGateway(name: String, init: InclusiveGateway.() -> Unit = {}) = flowNode(InclusiveGateway(this, name), init)
+    fun exclusiveGateway(name: String, init: ExclusiveGateway.() -> Unit = {}) = flowNode(ExclusiveGateway(this, name), init)
     fun transitions(init: TransitionContainer.() -> Unit) {
         transitionContainer.init()
     }
@@ -41,7 +39,7 @@ class Process(private val name: String,
         transitionContainer.transitionsList.forEach{ transition ->
             if(!transition.default) {
                 if (transition.hasCondition()) {
-                    builder.addTransition(transition.source, transition.target, transition.condition?.build())
+                    builder.addTransition(transition.source, transition.target, transition.condition?.build(this))
                 } else {
                     builder.addTransition(transition.source, transition.target)
                 }

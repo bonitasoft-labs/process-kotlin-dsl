@@ -5,9 +5,10 @@ import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 
 abstract class FlowNode(parent: DataContainer, val name: String) : DataContainer(parent) {
 
-    fun build(builder: ProcessDefinitionBuilder){
+    open fun build(builder: ProcessDefinitionBuilder) : FlowElementContainerBuilder{
         val buildFlowNode = buildFlowNode(builder)
         buildData(buildFlowNode)
+        return buildFlowNode
     }
     abstract fun buildFlowNode(builder: ProcessDefinitionBuilder) : FlowElementContainerBuilder
 

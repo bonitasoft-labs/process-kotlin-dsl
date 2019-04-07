@@ -12,9 +12,9 @@ object ConditionTest : Spek({
 
     describe("Verify that conditions are correctly created") {
         it("should have generated the correct expression from simple condition") {
-            val condition = Condition(DataContainer())
+            val condition = Condition()
             condition.groovy("return true")
-            condition.build().apply {
+            condition.build(DataContainer()).apply {
                 returnType.should.equal("java.lang.Boolean")
                 content.should.equal("return true")
                 interpreter.should.equal("GROOVY")
@@ -22,7 +22,7 @@ object ConditionTest : Spek({
             }
         }
         it("should generate groovy script expression with dependencies") {
-            val condition = Condition(DataContainer()
+            val dataContainer = DataContainer()
                     .data {
                         name = "myData"
                         type = DataType.string()
@@ -31,32 +31,33 @@ object ConditionTest : Spek({
                         name = "myBiggestData"
                         type = DataType.string()
                     }
-            )
+            val condition = Condition()
             condition.groovy("return true") {
                 dataRef("myData")
                 dataRef("myBiggestData")
             }
-            condition.build().apply {
+            condition.build(dataContainer).apply {
                 content.should.equal("return true")
                 dependencies.should.have.size(2)
                 dependencies.map { it.name }.should.equal(listOf("myData", "myBiggestData"))
             }
         }
         it("should fail when generating groovy script expression with missing dependencies") {
-            val condition = Condition(DataContainer())
+            val condition = Condition()
             condition.groovy("return true") {
                 dataRef("myData")
                 dataRef("myBiggestData")
             }
-            assertThrows<IllegalArgumentException> { condition.build() }
+            assertThrows<IllegalArgumentException> { condition.build(DataContainer()) }
         }
         it("should generate data dependency expression") {
-            val condition = Condition(DataContainer().data {
+            val dataContainer = DataContainer().data {
                 name = "myData"
                 type = DataType.string()
-            })
+            }
+            val condition = Condition()
             condition.dataRef("myData")
-            condition.build().apply {
+            condition.build(dataContainer).apply {
                 content.should.equal("myData")
                 expressionType.should.equal("TYPE_VARIABLE")
             }
