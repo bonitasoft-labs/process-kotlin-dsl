@@ -6,4 +6,7 @@ open class OperationContainer {
 
     fun update(elementToUpdate: String) = OperationDSLBuilder(elementToUpdate).apply { operations.add(this) }
 
+
+    infix fun OperationContainer.update(elementToUpdate: String) = OperationDSLBuilder(elementToUpdate).apply { operations.add(this) }
+
 }

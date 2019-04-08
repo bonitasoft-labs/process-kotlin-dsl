@@ -67,7 +67,7 @@ class ConnectorBuilder {
             val connectorDefinitionBuilder = builder.addConnector(connectorId, connectorId, "1.0", connectorEvent)
                     .addInput("functionClassName", classToCall.name.toExpression())
             inputsForFunction?.forEachIndexed { index, expr ->
-                connectorDefinitionBuilder.addInput("functionParam" + (index + 1), expr.build(dataContainer))
+                connectorDefinitionBuilder.addInput("functionParam${index + 1}", expr.build(dataContainer))
             }
         }
     }
@@ -97,9 +97,9 @@ class ConnectorBuilder {
 <implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
     <definitionId>$definitionId</definitionId>
     <definitionVersion>$definitionVersion</definitionVersion>
-    <implementationClassname>$implementationId</implementationClassname>
-    <implementationId>$implementationVersion</implementationId>
-    <implementationVersion>$implementationClassname</implementationVersion>
+    <implementationClassname>$implementationClassname</implementationClassname>
+    <implementationId>$implementationId</implementationId>
+    <implementationVersion>$implementationVersion</implementationVersion>
     <jarDependencies>${jarDependencies}
     </jarDependencies>
 </implementation:connectorImplementation>"""

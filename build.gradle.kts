@@ -21,18 +21,24 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     mavenLocal()
     jcenter()
+    maven("http://repositories.rd.lan/maven/all/")
 }
 
 dependencies {
-    api("org.bonitasoft.engine:bonita-client:7.8.0")
-    api("org.bonitasoft.engine:bonita-common:7.8.0")
+    api("org.bonitasoft.engine:bonita-client:7.8.3")
+    api("org.bonitasoft.engine:bonita-common:7.8.3")
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
 
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
     testImplementation("org.spekframework.spek2:spek-dsl-jvm:2.0.1")
     testImplementation("com.winterbe:expekt:0.5.0")
+    testImplementation("org.bonitasoft.engine:bonita-test-api:7.8.3")
+    testImplementation("org.bonitasoft.engine:bonita-server:7.8.3")
+    testImplementation("org.bonitasoft.platform:platform-resources:7.8.3")
+    testImplementation("org.awaitility:awaitility-kotlin:3.1.6")
     testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:2.0.1")
 
     // spek requires kotlin-reflect, can be omitted if already in the classpath
@@ -40,6 +46,7 @@ dependencies {
 }
 
 val test by tasks.getting(Test::class) {
+    include("**/*Test.class")
     useJUnitPlatform {
         includeEngines("spek2")
     }

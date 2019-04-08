@@ -3,6 +3,7 @@
  */
 package com.bonitasoft.engine.dsl.process
 
+import com.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.caseId
 import com.winterbe.expekt.should
 import org.bonitasoft.engine.bpm.flownode.MessageEventTriggerDefinition
 import org.spekframework.spek2.Spek
@@ -49,13 +50,9 @@ object EventTest : Spek({
         val process = process("MyProcess", "1.0") {
             catchMessage("myEvent"){
                 message("messageName"){
-                    correlations(
-                            "correlation1" to "value1",
-                            "correlation2" to "value2",
-                            "correlation3" to "value3",
-                            "correlation4" to "value4",
-                            "correlation5" to "value5"
-                    )
+                    correlations{
+                        "caseId" shouldMatch caseId
+                    }
                 }
             }
         }
@@ -67,11 +64,7 @@ object EventTest : Spek({
             val messageEventTriggerDefinition = processDefinition.flowElementContainer.intermediateCatchEvents[0].eventTriggers[0] as MessageEventTriggerDefinition
             messageEventTriggerDefinition.messageName.should.equal("messageName")
             messageEventTriggerDefinition.correlations.map { it.key.content to it.value.content }.should.contain.all.elements(
-                    "correlation1" to "value1",
-                    "correlation2" to "value2",
-                    "correlation3" to "value3",
-                    "correlation4" to "value4",
-                    "correlation5" to "value5"
+                    "caseId" to "processInstanceId"
             )
         }
     }

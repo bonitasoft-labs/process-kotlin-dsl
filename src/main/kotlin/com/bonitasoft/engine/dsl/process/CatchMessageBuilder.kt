@@ -4,16 +4,15 @@ import org.bonitasoft.engine.bpm.process.impl.CatchMessageEventTriggerDefinition
 
 class CatchMessageBuilder(val name: String) {
 
-    private val correlations : MutableMap<String,String> = mutableMapOf()
+    private var correlations : CorrelationBuilder? = null
 
-    fun correlations(vararg pairs: Pair<String, String>) {
-        correlations.putAll(pairs)
+
+    fun correlations(init : CorrelationBuilder.()->Unit) {
+        correlations = CorrelationBuilder().apply(init)
     }
 
-    fun buildCatchMessage(messageBuilder: CatchMessageEventTriggerDefinitionBuilder) {
-        correlations.forEach{c->
-            messageBuilder.addCorrelation(c.key.toExpression(), c.value.toExpression())
-        }
+    fun buildCatchMessage(messageBuilder: CatchMessageEventTriggerDefinitionBuilder, dataContainer: DataContainer) {
+        correlations?.build(messageBuilder,dataContainer)
     }
 
 

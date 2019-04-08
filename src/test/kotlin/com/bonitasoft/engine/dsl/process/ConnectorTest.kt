@@ -17,6 +17,8 @@ object ConnectorTest : Spek({
     describe("A task having a connector") {
 
         val process = process("MyProcess", "1.0") {
+
+            initiator("john")
             data {
                 name = "myData"
                 type = string()
@@ -27,11 +29,13 @@ object ConnectorTest : Spek({
             }
             automaticTask("taskWithOps") {
                 connector{
-                    className = "com.acme.MyConnector"
+//                    restCall(groovy("my url build")) saveToData "restCallresult"
+//                    connectorClass = MyConnector::class
                     inputs {
                         "input1" takes dataRef("myData")
-                        "input2" takes groovy("'toto'+myOtherData") {
+                        "input2" takes groovy("myData+myOtherData") {
                             dataRef("myOtherData")
+                            dataRef("myData")
                         }
                     }
                     outputs {
@@ -39,20 +43,20 @@ object ConnectorTest : Spek({
                         update("myOtherOutput").with(outputRef("output1"))
                     }
                 }
-                connector {
-                    execute { input1:String?, input2:String? ->
-                        return@execute input1+input2
-                    }
-                    inputs(
-                        dataRef("myData"),
-                        groovy("'toto'+myOtherData") {
-                            dataRef("myOtherData")
-                        }
-                    )
-                    outputs {
-                        "result" saveToData "myOtherOutput"
-                    }
-                }
+//                connector {
+//                    execute { input1:String?, input2:String? ->
+//                        return@execute input1+input2
+//                    }
+//                    inputs(
+//                        dataRef("myData"),
+//                        groovy("'toto'+myOtherData") {
+//                            dataRef("myOtherData")
+//                        }
+//                    )
+//                    outputs {
+//                        "result" saveToData "myOtherOutput"
+//                    }
+//                }
             }
 
         }
@@ -62,7 +66,7 @@ object ConnectorTest : Spek({
 //        BusinessArchiveFactory.writeBusinessArchiveToFile(businessArchive, File("/Users/baptiste/git/process-kotlin-dsl/test.bar"))
         it("should have the right name and version") {
             val task = processDefinition.flowElementContainer.getActivity("taskWithOps")
-            task.connectors.should.have.size(1)
+//            task.connectors.should.have.size(1)
 
         }
     }

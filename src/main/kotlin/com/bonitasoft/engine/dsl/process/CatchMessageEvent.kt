@@ -2,7 +2,6 @@ package com.bonitasoft.engine.dsl.process
 
 import org.bonitasoft.engine.bpm.process.impl.IntermediateCatchEventDefinitionBuilder
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
-import org.bonitasoft.engine.bpm.process.impl.StartEventDefinitionBuilder
 
 class CatchMessageEvent(parent: DataContainer, name: String) : CatchEvent(parent, name) {
 
@@ -15,7 +14,7 @@ class CatchMessageEvent(parent: DataContainer, name: String) : CatchEvent(parent
 
     override fun buildFlowNode(builder: ProcessDefinitionBuilder): IntermediateCatchEventDefinitionBuilder {
         val flowNodeBuilder = super.buildFlowNode(builder)
-        message?.apply { this.buildCatchMessage(flowNodeBuilder.addMessageEventTrigger(this.name)) }
+        message?.apply { this.buildCatchMessage(flowNodeBuilder.addMessageEventTrigger(this.name), this@CatchMessageEvent) }
         return flowNodeBuilder
     }
 }

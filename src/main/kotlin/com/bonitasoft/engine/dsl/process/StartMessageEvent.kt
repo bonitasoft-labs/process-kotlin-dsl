@@ -14,7 +14,7 @@ class StartMessageEvent(parent: DataContainer, name: String) : StartEvent(parent
 
     override fun buildFlowNode(builder: ProcessDefinitionBuilder): StartEventDefinitionBuilder {
         val flowNodeBuilder = super.buildFlowNode(builder)
-        message?.apply { this.buildCatchMessage(flowNodeBuilder.addMessageEventTrigger(this.name)) }
+        message?.apply { this.buildCatchMessage(flowNodeBuilder.addMessageEventTrigger(this.name), this@StartMessageEvent) }
         return flowNodeBuilder
     }
 }

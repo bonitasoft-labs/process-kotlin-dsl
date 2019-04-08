@@ -13,7 +13,7 @@ class DependenciesBuilder(private var expressions: MutableList<String> = ArrayLi
     internal fun build(dataContainer: DataContainer): List<Expression> {
         return expressions.map { name ->
             val dep = dataContainer.resolveData(name)
-            ExpressionBuilder().createDataExpression(name, dep.name)
+            ExpressionBuilder().createDataExpression(name, dep.type.type)
         }
     }
 }

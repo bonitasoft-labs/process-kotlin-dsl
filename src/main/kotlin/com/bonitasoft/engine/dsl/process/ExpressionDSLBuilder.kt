@@ -1,24 +1,23 @@
 package com.bonitasoft.engine.dsl.process
 
-import org.bonitasoft.engine.expression.Expression
-import org.bonitasoft.engine.expression.ExpressionBuilder
-import org.bonitasoft.engine.expression.ExpressionInterpreter
-import org.bonitasoft.engine.expression.ExpressionType
+import org.bonitasoft.engine.expression.*
 import java.util.*
 
 open class ExpressionDSLBuilder {
 
-
     object ExpressionDSLBuilderObject {
+
+
         fun dataRef(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { dataRef(data) }
         fun groovy(script: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script) }
         fun groovy(script: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
         fun input(name: String, type: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { input(name, type) }
-
-
+        val caseId: ExpressionDSLBuilder
+            get() = ExpressionDSLBuilder().apply { engineConstant(ExpressionConstants.PROCESS_INSTANCE_ID) }
     }
 
 
+    private var name: String? = null
     private var type: ExpressionType? = null
     private var interpreter: String? = null
     private var content: String? = null
@@ -39,6 +38,7 @@ open class ExpressionDSLBuilder {
     }
 
     fun dataRef(data: String) {
+        name = data
         type = ExpressionType.TYPE_VARIABLE
         content = data
     }
@@ -76,6 +76,13 @@ open class ExpressionDSLBuilder {
         returnType = type
     }
 
+    fun engineConstant(value: ExpressionConstants) {
+        name = value.engineConstantName
+        content = value.engineConstantName
+        type = ExpressionType.TYPE_ENGINE_CONSTANT
+        returnType = value.returnType
+    }
+
     internal open fun build(dataContainer: DataContainer): Expression {
         val builder = initBuilder(dataContainer)
         return builder.done()
@@ -86,7 +93,7 @@ open class ExpressionDSLBuilder {
             returnType = dataContainer.resolveData(content!!).type.type
         }
 
-        val builder = ExpressionBuilder().createNewInstance(UUID.randomUUID().toString())
+        val builder = ExpressionBuilder().createNewInstance(name?:UUID.randomUUID().toString())
                 .setReturnType(returnType)
                 .setContent(content)
                 .setExpressionType(type)

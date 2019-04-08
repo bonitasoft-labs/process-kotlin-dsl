@@ -9,7 +9,7 @@ class Process(private val name: String,
                    private val flowNodes: MutableList<FlowNode> = ArrayList()) : DataContainer() {
 
     private val transitionContainer: TransitionContainer = TransitionContainer(this)
-
+    private var initiator : String? = null
 
     fun start(name: String, init: StartEvent.() -> Unit = {}) = flowNode(StartEvent(this, name), init)
     fun startMessage(name: String, init: StartMessageEvent.() -> Unit = {}) = flowNode(StartMessageEvent(this, name), init)
@@ -35,6 +35,10 @@ class Process(private val name: String,
 
 
         val builder = ProcessDefinitionBuilder().createNewInstance(name, version)
+        if (initiator != null) {
+            builder.addActor(initiator, true)
+        }
+
         flowNodes.forEach { task ->
             task.build(builder, businessArchiveBuilder)
         }
@@ -56,6 +60,11 @@ class Process(private val name: String,
 
         builder.done()
         businessArchiveBuilder.setProcessDefinition(builder.done())
+        //FIXME add kotlin runtime
         return businessArchiveBuilder.done()
+    }
+
+    fun initiator(name: String) {
+        this.initiator = name
     }
 }

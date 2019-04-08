@@ -50,6 +50,7 @@ object DslTest : Spek({
     describe("A process DSL with parallel gateway") {
 
         val process = process("MyProcess", "1.0") {
+
             parallelGateway("gate1")
             automaticTask("Step1")
             automaticTask("Step2")
@@ -111,7 +112,7 @@ object DslTest : Spek({
                     name = "myStringData"
                     type = string()
                     initialValue {
-                        groovy("return myObject.value", "java.lang.String") {
+                        groovy("myObject.value", "java.lang.String") {
                             dataRef("myObject")
                         }
                     }
