@@ -8,7 +8,7 @@ class CorrelationBuilder {
 
     private val correlations: MutableList<CorrelationPair> = mutableListOf()
 
-    infix fun String.shouldMatch(expression: ExpressionDSLBuilder) {
+    infix fun String.mustMatch(expression: ExpressionDSLBuilder) {
         correlations.add(CorrelationPair(this, expression))
     }
 

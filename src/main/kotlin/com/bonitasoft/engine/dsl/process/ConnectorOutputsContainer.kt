@@ -8,4 +8,6 @@ class ConnectorOutputsContainer : OperationContainer() {
         return update(that).with(outputRef(this))
     }
 
+    fun add(name: String, dataRef: String) = update(dataRef).with(outputRef(name))
+
 }

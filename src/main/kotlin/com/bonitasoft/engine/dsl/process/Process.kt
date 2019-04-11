@@ -4,6 +4,11 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchive
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 
+
+@DslMarker
+annotation class ProcessMarker
+
+@ProcessMarker
 class Process(private val name: String,
                    private val version: String,
                    private val flowNodes: MutableList<FlowNode> = ArrayList()) : DataContainer() {

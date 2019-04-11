@@ -8,6 +8,7 @@ open class ExpressionDSLBuilder {
     object ExpressionDSLBuilderObject {
 
 
+        fun constant(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { constant(data) }
         fun dataRef(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { dataRef(data) }
         fun groovy(script: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script) }
         fun groovy(script: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }

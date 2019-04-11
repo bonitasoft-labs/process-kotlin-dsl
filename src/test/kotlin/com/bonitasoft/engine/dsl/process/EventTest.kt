@@ -51,7 +51,7 @@ object EventTest : Spek({
             catchMessage("myEvent"){
                 message("messageName"){
                     correlations{
-                        "caseId" shouldMatch caseId
+                        "caseId" mustMatch caseId
                     }
                 }
             }

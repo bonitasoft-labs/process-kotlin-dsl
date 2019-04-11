@@ -4,9 +4,12 @@ class ConnectorInputsContainer {
 
     private var intputs: MutableMap<String, ExpressionDSLBuilder> = mutableMapOf()
 
+    fun add(key: String, value: ExpressionDSLBuilder) {
+        intputs[key] = value
+    }
 
     infix fun String.takes(that: ExpressionDSLBuilder) {
-        intputs.put(this, that)
+        intputs[this] = that
     }
 
 }

@@ -4,13 +4,10 @@
 package com.bonitasoft.engine.dsl.process
 
 import com.bonitasoft.engine.dsl.process.DataType.Companion.string
-import com.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.dataRef
+import com.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.constant
 import com.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.groovy
-import com.winterbe.expekt.should
-import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
-import java.io.File
 
 object ConnectorTest : Spek({
 
@@ -20,7 +17,7 @@ object ConnectorTest : Spek({
 
             initiator("john")
             data {
-                name = "myData"
+                name = "resourceName"
                 type = string()
             }
             data {
@@ -29,20 +26,40 @@ object ConnectorTest : Spek({
             }
             automaticTask("taskWithOps") {
                 connector{
-//                    restCall(groovy("my url build")) saveToData "restCallresult"
-//                    connectorClass = MyConnector::class
-                    inputs {
-                        "input1" takes dataRef("myData")
-                        "input2" takes groovy("myData+myOtherData") {
-                            dataRef("myOtherData")
-                            dataRef("myData")
-                        }
-                    }
-                    outputs {
-                        "output1" saveToData "myOtherOutput"
-                        update("myOtherOutput").with(outputRef("output1"))
+                    restCall {
+                        url(groovy("'http://localhost/'+resourceName") {
+                            dataRef("resourceName")
+                        })
+                        method(constant("GET"))
+                        saveResultTo ("myOtherOutput")
                     }
                 }
+//                connector{
+//                    inputs{
+//                        "input1" takes dataRef("myData")
+//                        "input2" takes dataRef("myData")
+//                    }
+//                    restCall {
+//                        url(dataRef("myData"))
+//                        myInput2(dataRef("myOtherData"))
+//                        saveResultTo("myOtherOutput")
+//                        outputs {
+//                            update("myOtherOutput").with(result())
+//                        }
+//                    }
+//                }
+
+//                    inputs {
+//                        "input1" takes dataRef("myData")
+//                        "input2" takes groovy("myData+myOtherData") {
+//                            dataRef("myOtherData")
+//                            dataRef("myData")
+//                        }
+//                    }
+//                    outputs {
+//                        "output1" saveToData "myOtherOutput"
+//                        update("myOtherOutput").with(outputRef("output1"))
+//                    }
 //                connector {
 //                    execute { input1:String?, input2:String? ->
 //                        return@execute input1+input2

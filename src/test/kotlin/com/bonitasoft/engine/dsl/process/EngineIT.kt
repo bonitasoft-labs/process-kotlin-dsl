@@ -67,33 +67,33 @@ object EngineIT : Spek({
                     type = string()
                 }
                 automaticTask("taskWithOps") {
-                    connector {
-                        className = "com.acme.MyConnector"
-                        inputs {
-                            "input1" takes dataRef("myData")
-                            "input2" takes groovy("'toto'+myOtherData") {
-                                dataRef("myOtherData")
-                            }
-                        }
-                        outputs {
-                            "output1" saveToData "myOtherOutput"
-                            update("myOtherOutput").with(outputRef("output1"))
-                        }
-                    }
-                    connector {
-                        execute { input1: String?, input2: String? ->
-                            return@execute input1 + input2
-                        }
-                        inputs(
-                                dataRef("myData"),
-                                groovy("'toto'+myOtherData") {
-                                    dataRef("myOtherData")
-                                }
-                        )
-                        outputs {
-                            "result" saveToData "connectorResult"
-                        }
-                    }
+//                    connector {
+//                        className = "com.acme.MyConnector"
+//                        inputs {
+//                            "input1" takes dataRef("myData")
+//                            "input2" takes groovy("'toto'+myOtherData") {
+//                                dataRef("myOtherData")
+//                            }
+//                        }
+//                        outputs {
+//                            "output1" saveToData "myOtherOutput"
+//                            update("myOtherOutput").with(outputRef("output1"))
+//                        }
+//                    }
+//                    connector {
+//                        execute { input1: String?, input2: String? ->
+//                            return@execute input1 + input2
+//                        }
+//                        inputs(
+//                                dataRef("myData"),
+//                                groovy("'toto'+myOtherData") {
+//                                    dataRef("myOtherData")
+//                                }
+//                        )
+//                        outputs {
+//                            "result" saveToData "connectorResult"
+//                        }
+//                    }
                 }
 
             }
