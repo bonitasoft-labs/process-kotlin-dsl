@@ -3,10 +3,12 @@ package com.bonitasoft.engine.dsl.process
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.process.impl.FlowElementContainerBuilder
 
+@ProcessMarker
 open class DataContainer(val parent: DataContainer? = null) {
 
     var dataList: MutableList<Data> = mutableListOf()
     var connectors: MutableList<ConnectorBuilder> = mutableListOf()
+    internal var contract: ContractContainer? = null
 
     fun connector(className: String, init: ConnectorBuilder.() -> Unit) = connectors.add(ConnectorBuilder().apply(init))
 
@@ -26,6 +28,9 @@ open class DataContainer(val parent: DataContainer? = null) {
     internal fun resolveData(name: String): Data {
         return dataList.find { it.name == name } ?: parent?.resolveData(name)
         ?: throw IllegalArgumentException("Dependency named $name not found")
+    }
+    internal fun resolveContract(name: String): String? {
+        return contract?.inputs?.find { it.name == name }?.getJavaType()
     }
 
     internal fun buildData(builder: FlowElementContainerBuilder, businessArchiveBuilder: BusinessArchiveBuilder) {

@@ -3,6 +3,7 @@ package com.bonitasoft.engine.dsl.process
 import org.bonitasoft.engine.expression.*
 import java.util.*
 
+@ProcessMarker
 open class ExpressionDSLBuilder {
 
     object ExpressionDSLBuilderObject {
@@ -13,6 +14,7 @@ open class ExpressionDSLBuilder {
         fun groovy(script: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script) }
         fun groovy(script: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
         fun input(name: String, type: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { input(name, type) }
+        fun contract(name: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { contract(name) }
         val caseId: ExpressionDSLBuilder
             get() = ExpressionDSLBuilder().apply { engineConstant(ExpressionConstants.PROCESS_INSTANCE_ID) }
     }
@@ -67,6 +69,13 @@ open class ExpressionDSLBuilder {
         returnType = type
         content = name
     }
+
+
+    fun contract(name: String) {
+        this.type = ExpressionType.TYPE_CONTRACT_INPUT
+        content = name
+    }
+
     fun groovy(script: String, type: String) {
         groovy(script)
         returnType = type
@@ -92,6 +101,9 @@ open class ExpressionDSLBuilder {
     internal fun initBuilder(dataContainer: DataContainer): ExpressionBuilder {
         if (type == ExpressionType.TYPE_VARIABLE && content != null) {
             returnType = dataContainer.resolveData(content!!).type.type
+        }
+        if (type == ExpressionType.TYPE_CONTRACT_INPUT && content != null) {
+            returnType = dataContainer.resolveContract(content!!)
         }
 
         val builder = ExpressionBuilder().createNewInstance(name?:UUID.randomUUID().toString())

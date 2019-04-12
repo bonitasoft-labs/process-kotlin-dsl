@@ -20,9 +20,7 @@ abstract class Activity(parent: DataContainer, name: String) : FlowNode(parent, 
     }
 
     private fun buildOperation(builder: ActivityDefinitionBuilder) {
-        operationContainer?.operations?.forEach { op ->
-            builder.addOperation(op.build(this))
-        }
+        operationContainer?.build(builder, this)
     }
 
     abstract override fun buildFlowNode(builder: ProcessDefinitionBuilder): ActivityDefinitionBuilder
