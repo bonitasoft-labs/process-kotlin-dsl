@@ -26,6 +26,9 @@ class DataType(val type: String) {
         fun boolean(): DataType {
             return DataType("java.lang.Boolean")
         }
+        fun integer(): DataType {
+            return DataType("java.lang.Integer")
+        }
 
         fun custom(type: String): DataType {
             return DataType(type)
