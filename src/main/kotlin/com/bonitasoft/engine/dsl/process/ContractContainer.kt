@@ -5,7 +5,7 @@ import org.bonitasoft.engine.bpm.process.impl.ContractDefinitionBuilder
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder
 
-@ProcessMarker
+@ProcessDSLMarker
 class ContractContainer {
 
     val inputs: MutableList<ContractInputDSLBuilder> = mutableListOf()

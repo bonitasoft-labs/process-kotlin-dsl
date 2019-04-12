@@ -3,13 +3,14 @@ package com.bonitasoft.engine.dsl.process
 import org.bonitasoft.engine.expression.*
 import java.util.*
 
-@ProcessMarker
+@ProcessDSLMarker
 open class ExpressionDSLBuilder {
 
     object ExpressionDSLBuilderObject {
 
 
         fun constant(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { constant(data) }
+        fun constant(data: Boolean): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { constant(data) }
         fun dataRef(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { dataRef(data) }
         fun groovy(script: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script) }
         fun groovy(script: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
@@ -31,7 +32,6 @@ open class ExpressionDSLBuilder {
         type = ExpressionType.TYPE_READ_ONLY_SCRIPT
         interpreter = ExpressionInterpreter.GROOVY.name
         content = script
-        returnType = "java.lang.String"
     }
 
     open fun groovy(script: String, init: DependenciesBuilder.() -> Unit) {
@@ -93,25 +93,23 @@ open class ExpressionDSLBuilder {
         returnType = value.returnType
     }
 
-    internal open fun build(dataContainer: DataContainer): Expression {
-        val builder = initBuilder(dataContainer)
-        return builder.done()
-    }
-
-    internal fun initBuilder(dataContainer: DataContainer): ExpressionBuilder {
+    internal open fun build(dataContainer: DataContainer, returnTypeIfNotSet : String? = "java.lang.String"): Expression {
         if (type == ExpressionType.TYPE_VARIABLE && content != null) {
             returnType = dataContainer.resolveData(content!!).type.type
         }
         if (type == ExpressionType.TYPE_CONTRACT_INPUT && content != null) {
             returnType = dataContainer.resolveContract(content!!)
         }
-
-        val builder = ExpressionBuilder().createNewInstance(name?:UUID.randomUUID().toString())
+        if (returnType == null) {
+            returnType = returnTypeIfNotSet
+        }
+        val builder = ExpressionBuilder().createNewInstance(name ?:UUID.randomUUID().toString())
                 .setReturnType(returnType)
                 .setContent(content)
                 .setExpressionType(type)
                 .setInterpreter(interpreter)
         dependenciesBuilder?.build(dataContainer).apply { builder.setDependencies(this) }
-        return builder
+        return builder.done()
     }
+
 }

@@ -12,10 +12,9 @@ object ConditionTest : Spek({
 
     describe("Verify that conditions are correctly created") {
         it("should have generated the correct expression from simple condition") {
-            val condition = Condition()
+            val condition = ExpressionDSLBuilder()
             condition.groovy("return true")
             condition.build(DataContainer()).apply {
-                returnType.should.equal("java.lang.Boolean")
                 content.should.equal("return true")
                 interpreter.should.equal("GROOVY")
                 dependencies.should.be.empty
@@ -31,7 +30,7 @@ object ConditionTest : Spek({
                         name = "myBiggestData"
                         type = DataType.string()
                     }
-            val condition = Condition()
+            val condition = ExpressionDSLBuilder()
             condition.groovy("return true") {
                 dataRef("myData")
                 dataRef("myBiggestData")
@@ -43,7 +42,7 @@ object ConditionTest : Spek({
             }
         }
         it("should fail when generating groovy script expression with missing dependencies") {
-            val condition = Condition()
+            val condition = ExpressionDSLBuilder()
             condition.groovy("return true") {
                 dataRef("myData")
                 dataRef("myBiggestData")
@@ -55,7 +54,7 @@ object ConditionTest : Spek({
                 name = "myData"
                 type = DataType.string()
             }
-            val condition = Condition()
+            val condition = ExpressionDSLBuilder()
             condition.dataRef("myData")
             condition.build(dataContainer).apply {
                 content.should.equal("myData")

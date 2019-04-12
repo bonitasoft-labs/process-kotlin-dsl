@@ -19,6 +19,11 @@ data class TransitionContainer(val dataContainer: DataContainer, val transitions
         return from(this.name).to(that.name)
     }
 
+    infix fun Transition.withCondition(that: ExpressionDSLBuilder): Transition {
+        this.condition = that
+        return this
+    }
+
     internal fun add( transition : Transition) {
        transitionsList.add(transition)
     }

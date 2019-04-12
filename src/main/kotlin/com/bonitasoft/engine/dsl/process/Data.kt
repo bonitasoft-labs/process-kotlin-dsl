@@ -2,6 +2,7 @@ package com.bonitasoft.engine.dsl.process
 
 import org.bonitasoft.engine.expression.Expression
 
+@ProcessDSLMarker
 data class Data(val dataContainer: DataContainer, var name: String = "", var type: DataType = DataType.string(), var initialExpression: ExpressionDSLBuilder? = null) {
 
     fun initialValue(init: ExpressionDSLBuilder.() -> Unit) {

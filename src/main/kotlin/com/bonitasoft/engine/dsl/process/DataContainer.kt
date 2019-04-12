@@ -3,7 +3,7 @@ package com.bonitasoft.engine.dsl.process
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.process.impl.FlowElementContainerBuilder
 
-@ProcessMarker
+@ProcessDSLMarker
 open class DataContainer(val parent: DataContainer? = null) {
 
     var dataList: MutableList<Data> = mutableListOf()

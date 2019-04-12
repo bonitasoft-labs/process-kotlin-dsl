@@ -6,7 +6,7 @@ import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 
 
 @DslMarker
-annotation class ProcessMarker
+annotation class ProcessDSLMarker
 
 class Process(private val name: String,
                    private val version: String,
@@ -50,15 +50,7 @@ class Process(private val name: String,
         }
 
         transitionContainer.transitionsList.forEach{ transition ->
-            if(!transition.default) {
-                if (transition.hasCondition()) {
-                    builder.addTransition(transition.source, transition.target, transition.condition?.build(this))
-                } else {
-                    builder.addTransition(transition.source, transition.target)
-                }
-            } else{
-                builder.addDefaultTransition(transition.source,transition.target)
-            }
+            transition.build(builder,this)
         }
         dataList.forEach {
             builder.addData(it.name, it.getDataType(), it.getInitialValue())

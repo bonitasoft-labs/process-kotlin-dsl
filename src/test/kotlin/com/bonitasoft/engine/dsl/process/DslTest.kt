@@ -6,6 +6,7 @@ package com.bonitasoft.engine.dsl.process
 import com.bonitasoft.engine.dsl.process.DataType.Companion.boolean
 import com.bonitasoft.engine.dsl.process.DataType.Companion.custom
 import com.bonitasoft.engine.dsl.process.DataType.Companion.string
+import com.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.constant
 import com.winterbe.expekt.should
 import org.bonitasoft.engine.bpm.flownode.AutomaticTaskDefinition
 import org.spekframework.spek2.Spek
@@ -21,7 +22,7 @@ object DslTest : Spek({
             val step3 = automaticTask("Step3")
             transitions{
                 "Step1" to "Step2"
-                step2 to step3
+                step2 to step3 withCondition constant(true)
             }
 
         }
@@ -44,6 +45,11 @@ object DslTest : Spek({
             val step1 = processDefinition.flowElementContainer.getActivity("Step1")
             step1.outgoingTransitions.should.have.size(1)
             step1.outgoingTransitions[0].targetFlowNode.name.should.equal("Step2")
+        }
+        it("should have condition between step2 and step3") {
+            val step1 = processDefinition.flowElementContainer.getActivity("Step2")
+            step1.outgoingTransitions.should.have.size(1)
+            step1.outgoingTransitions[0].condition.content.should.equal("true")
         }
     }
 
@@ -80,7 +86,7 @@ object DslTest : Spek({
                     to("Step2").condition{
                         constant(true)
                     }
-                    to("Step3").condition{
+                    to("Step3").condition {
                         groovy("return true")
                     }
                 }
