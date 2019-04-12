@@ -20,8 +20,8 @@ object DslTest : Spek({
             automaticTask("Step1")
             val step2 = automaticTask("Step2")
             val step3 = automaticTask("Step3")
-            transitions{
-                "Step1" to "Step2"
+            transitions {
+                default from "Step1" to "Step2"
                 step2 to step3 withCondition constant(true)
             }
 
