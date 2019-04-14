@@ -12,7 +12,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.bonitasoft.engine.dsl"
+group = "org.bonitasoft.engine.dsl"
 version = "0.0.1"
 
 
