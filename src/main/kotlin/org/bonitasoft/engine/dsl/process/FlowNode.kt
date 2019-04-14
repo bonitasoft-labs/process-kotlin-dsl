@@ -4,6 +4,7 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.process.impl.FlowElementContainerBuilder
 import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
 
+@ProcessDSLMarker
 abstract class FlowNode(parent: org.bonitasoft.engine.dsl.process.DataContainer, val name: String) : org.bonitasoft.engine.dsl.process.DataContainer(parent) {
 
     open fun build(builder: ProcessDefinitionBuilder, businessArchiveBuilder: BusinessArchiveBuilder) : FlowElementContainerBuilder{
