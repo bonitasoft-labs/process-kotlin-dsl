@@ -3,6 +3,7 @@
  */
 package org.bonitasoft.engine.dsl.process
 
+import com.winterbe.expekt.should
 import org.bonitasoft.engine.dsl.process.DataType.Companion.string
 import org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.constant
 import org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.groovy
@@ -26,54 +27,13 @@ object ConnectorTest : Spek({
             }
             automaticTask("taskWithOps") {
                 connector{
-                    restCall {
-                        url(groovy("'http://localhost/'+resourceName") {
-                            dataRef("resourceName")
-                        })
-                        method(constant("GET"))
-                        saveResultTo ("myOtherOutput")
+                    email {
+                        from(constant("no-reply@acme.com"))
+                        to(constant("baptiste.mesta@gmail.com"))
+                        subject(constant("rejected"))
+                        message(constant("your request was rejected"))
                     }
                 }
-//                connector{
-//                    inputs{
-//                        "input1" takes dataRef("myData")
-//                        "input2" takes dataRef("myData")
-//                    }
-//                    restCall {
-//                        url(dataRef("myData"))
-//                        myInput2(dataRef("myOtherData"))
-//                        saveResultTo("myOtherOutput")
-//                        outputs {
-//                            update("myOtherOutput").with(result())
-//                        }
-//                    }
-//                }
-
-//                    inputs {
-//                        "input1" takes dataRef("myData")
-//                        "input2" takes groovy("myData+myOtherData") {
-//                            dataRef("myOtherData")
-//                            dataRef("myData")
-//                        }
-//                    }
-//                    outputs {
-//                        "output1" saveToData "myOtherOutput"
-//                        update("myOtherOutput").with(outputRef("output1"))
-//                    }
-//                connector {
-//                    execute { input1:String?, input2:String? ->
-//                        return@execute input1+input2
-//                    }
-//                    inputs(
-//                        dataRef("myData"),
-//                        groovy("'toto'+myOtherData") {
-//                            dataRef("myOtherData")
-//                        }
-//                    )
-//                    outputs {
-//                        "result" saveToData "myOtherOutput"
-//                    }
-//                }
             }
 
         }
@@ -83,8 +43,10 @@ object ConnectorTest : Spek({
 //        BusinessArchiveFactory.writeBusinessArchiveToFile(businessArchive, File("/Users/baptiste/git/process-kotlin-dsl/test.bar"))
         it("should have the right name and version") {
             val task = processDefinition.flowElementContainer.getActivity("taskWithOps")
-//            task.connectors.should.have.size(1)
-
+            task.connectors.should.have.size(1)
+            task.connectors[0].connectorId.should.equal("email")
+            task.connectors[0].inputs.keys.sorted().should.equal(listOf("from","to","subject","message").sorted())
+            businessArchive.getResource("connector/email.impl").should.be.not.`null`
         }
     }
 })

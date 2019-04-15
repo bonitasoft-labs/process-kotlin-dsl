@@ -1,15 +1,19 @@
 package org.bonitasoft.engine.dsl.process
 
+import org.bonitasoft.engine.bpm.bar.BarResource
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent
 import org.bonitasoft.engine.bpm.process.impl.FlowElementContainerBuilder
 import org.bonitasoft.engine.dsl.process.connectors.Connector
+import org.w3c.dom.Document
 import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.jar.JarEntry
 import java.util.jar.JarOutputStream
+import javax.xml.parsers.DocumentBuilderFactory
 
+@ProcessDSLMarker
 class ConnectorBuilder {
 
     private var outputOperations = org.bonitasoft.engine.dsl.process.ConnectorOutputsContainer()
@@ -21,6 +25,7 @@ class ConnectorBuilder {
             }
 
     private var connectorEvent = ConnectorEvent.ON_ENTER
+    var implFile: String? = null
 
 
     fun input(name: String, expression: org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder) = inputs.add(name, expression)
@@ -33,7 +38,19 @@ class ConnectorBuilder {
 
 
     fun build(builder: FlowElementContainerBuilder, businessArchiveBuilder: BusinessArchiveBuilder, dataContainer: org.bonitasoft.engine.dsl.process.DataContainer) {
-        val connectorId = UUID.randomUUID().toString()
+        val xmlDoc: Document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(this.javaClass.classLoader.getResourceAsStream(implFile))
+
+        xmlDoc.documentElement.normalize()
+
+        val connectorDefName = UUID.randomUUID().toString()
+
+        val connectorId = xmlDoc.getElementsByTagName("definitionId").item(0).textContent
+        val connectorVersion = xmlDoc.getElementsByTagName("definitionVersion").item(0).textContent
+        businessArchiveBuilder.addConnectorImplementation(BarResource(implFile, javaClass.classLoader.getResourceAsStream(implFile).readBytes()))
+        val connectorDefinitionBuilder = builder.addConnector(connectorDefName, connectorId, connectorVersion, ConnectorEvent.ON_ENTER)
+        inputs.build(connectorDefinitionBuilder, dataContainer)
+        outputOperations.build(connectorDefinitionBuilder, dataContainer)
+
 //        if (className != null) {
 //
 //        } else if (function2 != null) {
