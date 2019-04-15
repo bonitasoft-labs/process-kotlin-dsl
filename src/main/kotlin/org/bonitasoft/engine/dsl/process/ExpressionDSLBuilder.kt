@@ -19,6 +19,16 @@ open class ExpressionDSLBuilder {
         fun parameter(name: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { parameter(name) }
         val caseId: ExpressionDSLBuilder
             get() = ExpressionDSLBuilder().apply { engineConstant(ExpressionConstants.PROCESS_INSTANCE_ID) }
+        val startedBy: ExpressionDSLBuilder
+            get() = ExpressionDSLBuilder().apply {
+                groovy("""
+                    |def userId = apiAccessor.getProcessAPI().getProcessInstance(processInstanceId).getStartedBy()
+                    |return apiAccessor.getIdentityAPI().getUserWithProfessionalDetails(userId)
+            """.trimMargin(), "org.bonitasoft.engine.identity.UserWithContactData") {
+                    engineConstant(ExpressionConstants.PROCESS_INSTANCE_ID)
+                    engineConstant(ExpressionConstants.API_ACCESSOR)
+                }
+            }
     }
 
 
