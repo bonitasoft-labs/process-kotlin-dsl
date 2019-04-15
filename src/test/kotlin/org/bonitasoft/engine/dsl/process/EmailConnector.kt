@@ -2,14 +2,6 @@ package org.bonitasoft.engine.dsl.process
 
 import org.bonitasoft.engine.dsl.process.connectors.ConnectorImplDsl
 
-/*
-<definitionId>email</definitionId>
-	<definitionVersion>1.0.0</definitionVersion>
-    <description>Implementation based on javax.mail 1.4.5</description>
-	<implementationClassname>org.bonitasoft.connectors.email.EmailConnector</implementationClassname>
-	<implementationId>email-impl</implementationId>
-	<implementationVersion>1.0.12</implementationVersion>
- */
 fun org.bonitasoft.engine.dsl.process.ConnectorBuilder.email(init: EmailConnectorDsl.() -> Unit) {
     EmailConnectorDsl(this).apply(init)
 }

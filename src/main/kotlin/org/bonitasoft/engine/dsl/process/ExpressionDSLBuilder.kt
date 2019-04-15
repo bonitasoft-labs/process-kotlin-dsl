@@ -16,6 +16,7 @@ open class ExpressionDSLBuilder {
         fun groovy(script: String, init: org.bonitasoft.engine.dsl.process.DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
         fun input(name: String, type: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { input(name, type) }
         fun contract(name: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { contract(name) }
+        fun parameter(name: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { parameter(name) }
         val caseId: ExpressionDSLBuilder
             get() = ExpressionDSLBuilder().apply { engineConstant(ExpressionConstants.PROCESS_INSTANCE_ID) }
     }
@@ -73,6 +74,11 @@ open class ExpressionDSLBuilder {
 
     fun contract(name: String) {
         this.type = ExpressionType.TYPE_CONTRACT_INPUT
+        content = name
+    }
+
+    fun parameter(name: String) {
+        this.type = ExpressionType.TYPE_PARAMETER
         content = name
     }
 

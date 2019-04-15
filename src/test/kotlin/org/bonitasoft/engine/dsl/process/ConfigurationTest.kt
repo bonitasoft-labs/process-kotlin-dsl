@@ -33,5 +33,17 @@ object ConfigurationTest : Spek({
             exported.actorMapping!!.actors[1].memberships.should.equal(setOf(Actor.Membership("/requesters","member")))
             exported.actorMapping!!.actors[1].roles.should.equal(setOf("member"))
         }
+        it("should have parameters") {
+            val configuration = configuration {
+                parameters {
+                    "myParam1" to "maValue1"
+                    "myParam2" to "maValue2"
+                }
+            }
+
+            val exported = configuration.export()
+
+            exported.parameters!!.should.equal(mapOf("myParam1" to "maValue1", "myParam2" to "maValue2"))
+        }
     }
 })
