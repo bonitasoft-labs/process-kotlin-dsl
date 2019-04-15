@@ -13,10 +13,12 @@ open class ExpressionDSLBuilder {
         fun constant(data: Boolean): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { constant(data) }
         fun dataRef(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { dataRef(data) }
         fun groovy(script: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script) }
-        fun groovy(script: String, init: org.bonitasoft.engine.dsl.process.DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
+        fun groovy(script: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
         fun input(name: String, type: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { input(name, type) }
         fun contract(name: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { contract(name) }
         fun parameter(name: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { parameter(name) }
+        fun stringSubstitution(content: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { stringSubstitution(content, init) }
+
         val caseId: ExpressionDSLBuilder
             get() = ExpressionDSLBuilder().apply { engineConstant(ExpressionConstants.PROCESS_INSTANCE_ID) }
         val startedBy: ExpressionDSLBuilder
@@ -37,7 +39,7 @@ open class ExpressionDSLBuilder {
     private var interpreter: String? = null
     private var content: String? = null
     private var returnType: String? = null
-    private var dependenciesBuilder: org.bonitasoft.engine.dsl.process.DependenciesBuilder? = null
+    private var dependenciesBuilder: DependenciesBuilder? = null
 
     open fun groovy(script: String) {
         type = ExpressionType.TYPE_READ_ONLY_SCRIPT
@@ -45,9 +47,9 @@ open class ExpressionDSLBuilder {
         content = script
     }
 
-    open fun groovy(script: String, init: org.bonitasoft.engine.dsl.process.DependenciesBuilder.() -> Unit) {
+    open fun groovy(script: String, init: DependenciesBuilder.() -> Unit) {
         groovy(script)
-        dependenciesBuilder = org.bonitasoft.engine.dsl.process.DependenciesBuilder()
+        dependenciesBuilder = DependenciesBuilder()
         dependenciesBuilder?.init()
     }
 
@@ -97,7 +99,14 @@ open class ExpressionDSLBuilder {
         returnType = type
     }
 
-    fun groovy(script: String, type: String, init: org.bonitasoft.engine.dsl.process.DependenciesBuilder.() -> Unit) {
+    fun stringSubstitution(content: String, init: DependenciesBuilder.() -> Unit) {
+        this.type = ExpressionType.TYPE_PATTERN
+        this.content = content
+        returnType = "java.lang.String"
+        dependenciesBuilder = DependenciesBuilder().apply(init)
+    }
+
+    fun groovy(script: String, type: String, init: DependenciesBuilder.() -> Unit) {
         groovy(script, init)
         returnType = type
     }
