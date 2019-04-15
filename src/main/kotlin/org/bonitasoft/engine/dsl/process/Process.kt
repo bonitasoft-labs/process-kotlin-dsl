@@ -44,6 +44,9 @@ class Process(private val name: String,
         if (initiator != null) {
             builder.addActor(initiator, true)
         }
+        actors.forEach { actor ->
+            builder.addActor(actor)
+        }
 
         flowNodes.forEach { task ->
             task.build(builder, businessArchiveBuilder)

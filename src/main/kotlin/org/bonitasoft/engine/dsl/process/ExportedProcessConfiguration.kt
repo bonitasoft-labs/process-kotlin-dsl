@@ -8,4 +8,5 @@ class ExportedProcessConfiguration {
         this.actorMapping = actorMapping
     }
 
+
 }
