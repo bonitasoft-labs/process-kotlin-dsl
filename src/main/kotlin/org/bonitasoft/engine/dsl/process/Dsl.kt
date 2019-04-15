@@ -6,3 +6,9 @@ fun process(name: String, version: String, init: Process.() -> Unit): Process {
     process.init()
     return process
 }
+
+fun configuration(init: ProcessConfiguration.() -> Unit): ProcessConfiguration {
+    val processConfiguration = ProcessConfiguration()
+    processConfiguration.init()
+    return processConfiguration
+}

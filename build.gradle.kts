@@ -25,8 +25,8 @@ repositories {
 }
 
 dependencies {
-    api("org.bonitasoft.engine:bonita-client:7.8.3")
-    api("org.bonitasoft.engine:bonita-common:7.8.3")
+    api("org.bonitasoft.engine:bonita-client:7.9.0.W14-03")
+    api("org.bonitasoft.engine:bonita-common:7.9.0.W14-03")
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
