@@ -18,12 +18,8 @@ object ConnectorTest : Spek({
 
             initiator("john")
             data {
-                name = "resourceName"
-                type = string()
-            }
-            data {
-                name = "myOtherData"
-                type = string()
+                text named "resourceName"
+                text named "myOtherData"
             }
             automaticTask("taskWithOps") {
                 connector{

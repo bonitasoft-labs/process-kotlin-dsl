@@ -15,6 +15,7 @@ class Process(private val name: String,
     private val transitionContainer: TransitionContainer = TransitionContainer(this)
     private var initiator : String? = null
     private var actors: MutableList<String> = mutableListOf()
+    private val parameters: MutableList<String> = mutableListOf()
 
     fun start(name: String, init: StartEvent.() -> Unit = {}) = flowNode(StartEvent(this, name), init)
     fun startMessage(name: String, init: StartMessageEvent.() -> Unit = {}) = flowNode(StartMessageEvent(this, name), init)
@@ -27,6 +28,9 @@ class Process(private val name: String,
     fun exclusiveGateway(name: String, init: ExclusiveGateway.() -> Unit = {}) = flowNode(ExclusiveGateway(this, name), init)
     fun transitions(init: TransitionContainer.() -> Unit) {
         transitionContainer.init()
+    }
+    fun parameters(vararg parameters: String) {
+        this.parameters.addAll(parameters)
     }
 
     fun <T : FlowNode> flowNode(task: T, init: T.() -> Unit): T {
@@ -55,11 +59,12 @@ class Process(private val name: String,
         transitionContainer.transitionsList.forEach{ transition ->
             transition.build(builder,this)
         }
-        dataList.forEach {
-            builder.addData(it.name, it.getDataType(), it.getInitialValue())
-        }
+        dataList.build(builder)
 
         contract?.build(builder,this)
+        parameters.forEach {
+            builder.addParameter(it,"java.lang.String")
+        }
 
         builder.done()
         businessArchiveBuilder.setProcessDefinition(builder.done())

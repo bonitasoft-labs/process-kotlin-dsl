@@ -23,12 +23,8 @@ object ConditionTest : Spek({
         it("should generate groovy script expression with dependencies") {
             val dataContainer = org.bonitasoft.engine.dsl.process.DataContainer()
                     .data {
-                        name = "myData"
-                        type = org.bonitasoft.engine.dsl.process.DataType.string()
-                    }
-                    .data {
-                        name = "myBiggestData"
-                        type = org.bonitasoft.engine.dsl.process.DataType.string()
+                        text named "myData"
+                        text named "myBiggestData"
                     }
             val condition = ExpressionDSLBuilder()
             condition.groovy("return true") {
@@ -51,8 +47,7 @@ object ConditionTest : Spek({
         }
         it("should generate data dependency expression") {
             val dataContainer = org.bonitasoft.engine.dsl.process.DataContainer().data {
-                name = "myData"
-                type = org.bonitasoft.engine.dsl.process.DataType.string()
+                text named "myData"
             }
             val condition = ExpressionDSLBuilder()
             condition.dataRef("myData")

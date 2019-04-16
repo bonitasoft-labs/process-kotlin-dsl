@@ -5,9 +5,6 @@ package org.bonitasoft.engine.dsl.process
 
 import com.winterbe.expekt.should
 import org.bonitasoft.engine.bpm.flownode.AutomaticTaskDefinition
-import org.bonitasoft.engine.dsl.process.DataType.Companion.boolean
-import org.bonitasoft.engine.dsl.process.DataType.Companion.custom
-import org.bonitasoft.engine.dsl.process.DataType.Companion.string
 import org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.constant
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -111,30 +108,17 @@ object DslTest : Spek({
         it("should add data on a process") {
             val process = process("MyProcess", "1.0") {
                 data {
-                    name = "myObject"
-                    type = custom("com.bonitasoft.MyObject")
-                }
-                data {
-                    name = "myStringData"
-                    type = string()
-                    initialValue {
+                    custom("com.bonitasoft.MyObject") named "myObject"
+                    text named "myStringData" withInitialValue {
                         groovy("myObject.value", "java.lang.String") {
                             dataRef("myObject")
                         }
                     }
-                }
-                data {
-                    name = "boolData"
-                    type = boolean()
-                    initialValue {
-                        constant(true)
-                    }
+                    boolean named "boolData" withInitialValue constant(true)
                 }
                 automaticTask("myTask") {
                     data {
-                        name = "groovyData"
-                        type = string()
-                        initialValue {
+                        text named "groovyData" withInitialValue {
                             groovy("boolData + myStringData + myObject", "java.lan.String") {
                                 dataRef("boolData")
                                 dataRef("myStringData")

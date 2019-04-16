@@ -42,12 +42,12 @@ class ConnectorBuilder {
 
         xmlDoc.documentElement.normalize()
 
-        val connectorDefName = UUID.randomUUID().toString()
+        val name = UUID.randomUUID().toString()
 
         val connectorId = xmlDoc.getElementsByTagName("definitionId").item(0).textContent
         val connectorVersion = xmlDoc.getElementsByTagName("definitionVersion").item(0).textContent
         businessArchiveBuilder.addConnectorImplementation(BarResource(implFile, javaClass.classLoader.getResourceAsStream(implFile).readBytes()))
-        val connectorDefinitionBuilder = builder.addConnector(connectorDefName, connectorId, connectorVersion, ConnectorEvent.ON_ENTER)
+        val connectorDefinitionBuilder = builder.addConnector(name, connectorId, connectorVersion, ConnectorEvent.ON_ENTER)
         inputs.build(connectorDefinitionBuilder, dataContainer)
         outputOperations.build(connectorDefinitionBuilder, dataContainer)
 

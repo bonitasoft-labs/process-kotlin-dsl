@@ -1,12 +1,14 @@
 package org.bonitasoft.engine.dsl.process
 
+import org.bonitasoft.engine.dsl.process.DataType.Companion.string
 import org.bonitasoft.engine.expression.Expression
 
 @org.bonitasoft.engine.dsl.process.ProcessDSLMarker
-data class Data(val dataContainer: org.bonitasoft.engine.dsl.process.DataContainer, var name: String = "", var type: org.bonitasoft.engine.dsl.process.DataType = org.bonitasoft.engine.dsl.process.DataType.Companion.string(), var initialExpression: org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder? = null) {
+data class Data(val dataContainer: DataContainer, var name: String = "", var type: DataType = string(), var initialExpression: ExpressionDSLBuilder? = null) {
 
-    fun initialValue(init: org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.() -> Unit) {
-        initialExpression = org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder().apply(init)
+
+    fun initialValue(init: ExpressionDSLBuilder.() -> Unit) {
+        initialExpression = ExpressionDSLBuilder().apply(init)
     }
 
     internal fun getDataType() : String{
@@ -21,18 +23,20 @@ data class Data(val dataContainer: org.bonitasoft.engine.dsl.process.DataContain
 class DataType(val type: String) {
 
     companion object {
-        fun string(): org.bonitasoft.engine.dsl.process.DataType {
-            return org.bonitasoft.engine.dsl.process.DataType("java.lang.String")
-        }
-        fun boolean(): org.bonitasoft.engine.dsl.process.DataType {
-            return org.bonitasoft.engine.dsl.process.DataType("java.lang.Boolean")
-        }
-        fun integer(): org.bonitasoft.engine.dsl.process.DataType {
-            return org.bonitasoft.engine.dsl.process.DataType("java.lang.Integer")
+        fun string(): DataType {
+            return DataType("java.lang.String")
         }
 
-        fun custom(type: String): org.bonitasoft.engine.dsl.process.DataType {
-            return org.bonitasoft.engine.dsl.process.DataType(type)
+        fun boolean(): DataType {
+            return DataType("java.lang.Boolean")
+        }
+
+        fun integer(): DataType {
+            return DataType("java.lang.Integer")
+        }
+
+        fun custom(type: String): DataType {
+            return DataType(type)
         }
     }
 

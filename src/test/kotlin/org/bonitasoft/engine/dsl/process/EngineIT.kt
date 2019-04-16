@@ -10,6 +10,7 @@ import org.awaitility.kotlin.untilCallTo
 import org.bonitasoft.engine.api.APIClient
 import org.bonitasoft.engine.bpm.process.ArchivedProcessInstanceNotFoundException
 import org.bonitasoft.engine.dsl.process.DataType.Companion.string
+import org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.constant
 import org.bonitasoft.engine.identity.User
 import org.bonitasoft.engine.test.TestEngine
 import org.bonitasoft.engine.test.TestEngineImpl
@@ -46,22 +47,9 @@ object EngineIT : Spek({
             val process = process("MyProcess", "1.0") {
                 initiator("john")
                 data {
-                    name = "myData"
-                    type = string()
-                    initialValue {
-                        constant("myDataValue")
-                    }
-                }
-                data {
-                    name = "myOtherData"
-                    type = string()
-                    initialValue {
-                        constant("myOtherDataValue")
-                    }
-                }
-                data {
-                    name = "connectorResult"
-                    type = string()
+                    text named "myData" withInitialValue constant("myDataValue")
+                    text named "myOtherData" withInitialValue constant("myOtherDataValue")
+                    text named "connectorResult"
                 }
                 automaticTask("taskWithOps") {
 //                    connector {

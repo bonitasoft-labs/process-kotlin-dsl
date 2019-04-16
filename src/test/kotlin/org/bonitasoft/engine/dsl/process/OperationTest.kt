@@ -17,12 +17,8 @@ object OperationTest : Spek({
 
         val process = process("MyProcess", "1.0") {
             data {
-                name = "myData"
-                type = string()
-            }
-            data {
-                name = "myOtherData"
-                type = string()
+                text named "myData"
+                text named "myOtherData"
             }
             automaticTask("taskWithOps") {
                 operations {

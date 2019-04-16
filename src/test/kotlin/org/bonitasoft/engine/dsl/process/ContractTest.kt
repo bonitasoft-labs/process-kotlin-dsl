@@ -20,8 +20,7 @@ object ContractTest : Spek({
                 initiator("walter")
                 val john = actor("john")
                 data {
-                    name = "myData"
-                    type = boolean()
+                    boolean named "myData"
                 }
                 contract {
                     text named "type" withDescription "The type of the loan"

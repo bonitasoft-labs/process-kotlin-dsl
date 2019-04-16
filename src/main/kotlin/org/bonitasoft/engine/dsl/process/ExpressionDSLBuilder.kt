@@ -27,10 +27,10 @@ open class ExpressionDSLBuilder {
                     |def userId = apiAccessor.getProcessAPI().getProcessInstance(processInstanceId).getStartedBy()
                     |return apiAccessor.getIdentityAPI().getUserWithProfessionalDetails(userId)
             """.trimMargin(), "org.bonitasoft.engine.identity.UserWithContactData") {
-                    engineConstant(ExpressionConstants.PROCESS_INSTANCE_ID)
-                    engineConstant(ExpressionConstants.API_ACCESSOR)
+                    dependency(ExpressionDSLBuilder().apply{engineConstant(ExpressionConstants.PROCESS_INSTANCE_ID)})
+                    dependency(ExpressionDSLBuilder().apply{engineConstant(ExpressionConstants.API_ACCESSOR)})
                 }
-            }
+            }.apply { name = "startedBy" }
     }
 
 
@@ -118,7 +118,7 @@ open class ExpressionDSLBuilder {
         returnType = value.returnType
     }
 
-    internal open fun build(dataContainer: org.bonitasoft.engine.dsl.process.DataContainer, returnTypeIfNotSet : String? = "java.lang.String"): Expression {
+    internal open fun build(dataContainer: DataContainer, returnTypeIfNotSet : String? = "java.lang.String"): Expression {
         if (type == ExpressionType.TYPE_VARIABLE && content != null) {
             returnType = dataContainer.resolveData(content!!).type.type
         }
