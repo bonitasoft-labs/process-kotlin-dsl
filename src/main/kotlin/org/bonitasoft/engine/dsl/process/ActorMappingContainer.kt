@@ -1,5 +1,7 @@
 package org.bonitasoft.engine.dsl.process
 
+import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
+
 
 @ProcessDSLMarker
 class ActorMappingContainer {
@@ -31,5 +33,14 @@ class ActorMappingContainer {
             it.export(exportedActorMapping)
         }
         exportedProcessConfiguration.addActorMapping(exportedActorMapping)
+    }
+
+    fun build(bar: BusinessArchiveBuilder) {
+        val exportedActorMapping = org.bonitasoft.engine.bpm.bar.actorMapping.ActorMapping()
+
+        actorMappings.forEach {
+            it.export(exportedActorMapping)
+        }
+        bar.actorMapping = exportedActorMapping
     }
 }

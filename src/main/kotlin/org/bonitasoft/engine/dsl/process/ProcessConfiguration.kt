@@ -1,5 +1,9 @@
 package org.bonitasoft.engine.dsl.process
 
+import org.bonitasoft.engine.bpm.bar.BusinessArchive
+import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder
+import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder
+
 
 @ProcessDSLMarker
 class ProcessConfiguration {
@@ -15,12 +19,10 @@ class ProcessConfiguration {
     fun parameters(init: ParameterContainer.() -> Unit) {
         parameterContainer = ParameterContainer().apply(init)
     }
-
-    fun export(): ExportedProcessConfiguration {
-        val exportedProcessConfiguration = ExportedProcessConfiguration()
-        actorMappingContainer?.export(exportedProcessConfiguration)
-        parameterContainer?.export(exportedProcessConfiguration)
-        return exportedProcessConfiguration
+    fun contributeToBAR(bar: BusinessArchiveBuilder, processDefinitionBuilder: ProcessDefinitionBuilder) {
+        actorMappingContainer?.build(bar)
+        parameterContainer?.build(bar, processDefinitionBuilder)
     }
+
 
 }

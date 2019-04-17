@@ -41,6 +41,15 @@ class Process(private val name: String,
 
     fun export(): BusinessArchive {
 
+        val (businessArchiveBuilder, builder) = build()
+
+        builder.done()
+        businessArchiveBuilder.setProcessDefinition(builder.done())
+        //FIXME add kotlin runtime
+        return businessArchiveBuilder.done()
+    }
+
+    fun build(): Pair<BusinessArchiveBuilder, ProcessDefinitionBuilder> {
         val businessArchiveBuilder = BusinessArchiveBuilder().createNewBusinessArchive()
 
 
@@ -56,20 +65,16 @@ class Process(private val name: String,
             task.build(builder, businessArchiveBuilder)
         }
 
-        transitionContainer.transitionsList.forEach{ transition ->
-            transition.build(builder,this)
+        transitionContainer.transitionsList.forEach { transition ->
+            transition.build(builder, this)
         }
         dataList.build(builder)
 
-        contract?.build(builder,this)
+        contract?.build(builder, this)
         parameters.forEach {
-            builder.addParameter(it,"java.lang.String")
+            builder.addParameter(it, "java.lang.String")
         }
-
-        builder.done()
-        businessArchiveBuilder.setProcessDefinition(builder.done())
-        //FIXME add kotlin runtime
-        return businessArchiveBuilder.done()
+        return Pair(businessArchiveBuilder, builder)
     }
 
     fun initiator(name: String): org.bonitasoft.engine.dsl.process.ActorRef {
