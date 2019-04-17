@@ -6,8 +6,7 @@ package org.bonitasoft.engine.dsl.process
 import com.winterbe.expekt.should
 import org.bonitasoft.engine.bpm.contract.Type
 import org.bonitasoft.engine.bpm.flownode.UserTaskDefinition
-import org.bonitasoft.engine.dsl.process.DataType.Companion.boolean
-import org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.contract
+import org.bonitasoft.engine.dsl.process.ExpressionDSLBuilder.ExpressionDSLBuilderObject.contractValue
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -32,7 +31,7 @@ object ContractTest : Spek({
                         boolean named "accept" withDescription "whether to accept the loan or not"
                     }
                     operations {
-                        update("myData").with(contract("accept"))
+                        update("myData").with(contractValue("accept"))
                     }
                 }
 

@@ -16,7 +16,7 @@ open class ExpressionDSLBuilder {
         fun groovy(script: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script) }
         fun groovy(script: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
         fun input(name: String, type: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { input(name, type) }
-        fun contract(name: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { contract(name) }
+        fun contractValue(name: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { contract(name) }
         fun parameter(name: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { parameter(name) }
         fun stringSubstitution(content: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { stringSubstitution(content, init) }
 
