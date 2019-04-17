@@ -11,6 +11,7 @@ open class ExpressionDSLBuilder {
 
         fun constant(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { constant(data) }
         fun constant(data: Boolean): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { constant(data) }
+        fun constant(data: Int): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { constant(data) }
         fun dataRef(data: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { dataRef(data) }
         fun groovy(script: String): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script) }
         fun groovy(script: String, init: DependenciesBuilder.() -> Unit): ExpressionDSLBuilder = ExpressionDSLBuilder().apply { groovy(script, init) }
@@ -69,6 +70,11 @@ open class ExpressionDSLBuilder {
         type = ExpressionType.TYPE_CONSTANT
         returnType = "java.lang.String"
         content = condition
+    }
+    fun constant(condition: Int) {
+        type = ExpressionType.TYPE_CONSTANT
+        returnType = "java.lang.Integer"
+        content = condition.toString()
     }
 
     fun input(name: String) {
